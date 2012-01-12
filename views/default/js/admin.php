@@ -17,9 +17,6 @@ elgg.admin.init = function () {
 		$(this).stop().slideUp('medium');
 	});
 
-	// plugin screenshot modal
-	$('.elgg-plugin-screenshot a').click(elgg.admin.displayPluginScreenshot);
-
 	// draggable plugin reordering
 	$('#elgg-plugin-list > ul').sortable({
 		items:                'li:has(> .elgg-state-draggable)',
@@ -32,6 +29,7 @@ elgg.admin.init = function () {
 	});
 
 	// in-line editing for custom profile fields.
+	// @note this requires jquery.jeditable plugin
 	$(".elgg-state-editable").editable(elgg.admin.editProfileField, {
 		type:   'text',
 		onblur: 'submit',
@@ -41,7 +39,7 @@ elgg.admin.init = function () {
 	});
 
 	// draggable profile field reordering.
-	$('#sortable_profile_fields').sortable({
+	$('#elgg-profile-fields').sortable({
 		items: 'li',
 		handle: 'span.elgg-state-draggable',
 		stop: elgg.admin.moveProfileField
@@ -73,48 +71,6 @@ elgg.admin.movePlugin = function(e, ui) {
 };
 
 /**
- * Display a plugin screenshot.
- *
- * @param {Object} e The event object.
- * @return void
- */
-elgg.admin.displayPluginScreenshot = function(e) {
-	e.preventDefault();
-	var lb = $('.elgg-plugin-screenshot-lightbox');
-
-	if (lb.length < 1) {
-		$('body').append('<div class="elgg-plugin-screenshot-lightbox"></div>');
-		lb = $('.elgg-plugin-screenshot-lightbox');
-
-		lb.click(function() {
-			lb.hide();
-		});
-
-		$(document).click(function(e) {
-			var target = $(e.target);
-			if (target.is('a') && target.hasClass('elgg-plugin-screenshot-lightbox')) {
-				lb.hide();
-				e.preventDefault();
-			}
-		});
-	}
-
-	var html = '<img class="pas" src="' + $(this).attr('href') + '">';
-	var desc = $(this).find('img').attr('alt');
-
-	if (desc) {
-		html = '<h2 class="pam">' + desc + '</h2>' + html;
-	}
-
-	lb.html(html);
-
-	top_pos = $(window).scrollTop() + 10 + 'px';
-	left_pos = $(window).scrollLeft() + 5 + 'px';
-
-	lb.css('top', top_pos).css('left', left_pos).show();
-};
-
-/**
  * In-line editing for custom profile fields
  *
  * @param string   value    The new value
@@ -142,7 +98,7 @@ elgg.admin.editProfileField = function(value, settings) {
  * @return void
  */
 elgg.admin.moveProfileField = function(e, ui) {
-	var orderArr = $('#sortable_profile_fields').sortable('toArray');
+	var orderArr = $('#elgg-profile-fields').sortable('toArray');
 	var orderStr = orderArr.join(',');
 
 	elgg.action('profile/fields/reorder', {

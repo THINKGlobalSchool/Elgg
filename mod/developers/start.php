@@ -23,6 +23,8 @@ function developers_init() {
 	elgg_register_js('jquery.jstree', 'mod/developers/vendors/jsTree/jquery.jstree.js', 'footer');
 	elgg_register_css('jquery.jstree', 'mod/developers/vendors/jsTree/themes/default/style.css');
 
+	elgg_load_js('jquery.form');
+
 	elgg_register_js('elgg.dev', 'js/developers/developers.js', 'footer');
 	elgg_load_js('elgg.dev');
 }
@@ -59,15 +61,24 @@ function developers_process_settings() {
 
 function developers_setup_menu() {
 	if (elgg_in_context('admin')) {
-		elgg_register_admin_menu_item('develop', 'settings', 'developers');
-		elgg_register_admin_menu_item('develop', 'inspect', 'developers');
-		elgg_register_admin_menu_item('develop', 'preview', 'developers');
+		elgg_register_admin_menu_item('develop', 'inspect', 'develop_tools');
+		elgg_register_admin_menu_item('develop', 'preview', 'develop_tools');
+		elgg_register_admin_menu_item('develop', 'unit_tests', 'develop_tools');
+
+		elgg_register_menu_item('page', array(
+			'name' => 'dev_settings',
+			'href' => 'admin/developers/settings',
+			'text' => elgg_echo('settings'),
+			'context' => 'admin',
+			'priority' => 10,
+			'section' => 'develop'
+		));
 	}
 }
 
 /**
-* Clear all the strings so the raw descriptor strings are displayed
-*/
+ * Clear all the strings so the raw descriptor strings are displayed
+ */
 function developers_clear_strings() {
 	global $CONFIG;
 
@@ -111,8 +122,8 @@ function developers_wrap_views($hook, $type, $result, $params) {
 }
 
 /**
-* Log the events and plugin hooks
-*/
+ * Log the events and plugin hooks
+ */
 function developers_log_events($name, $type) {
 
 	// filter out some very common events
@@ -149,6 +160,7 @@ function developers_log_events($name, $type) {
  * Serve the theme preview pages
  *
  * @param array $page
+ * @return bool
  */
 function developers_theme_preview_controller($page) {
 	if (!isset($page[0])) {
@@ -157,13 +169,13 @@ function developers_theme_preview_controller($page) {
 
 	$pages = array(
 		'buttons',
-		'components', 
-		'forms', 
-		'grid', 
+		'components',
+		'forms',
+		'grid',
 		'icons',
-		'modules', 
-		'navigation', 
-		'typography', 
+		'modules',
+		'navigation',
+		'typography',
 	);
 	
 	foreach ($pages as $page_name) {
@@ -183,4 +195,5 @@ function developers_theme_preview_controller($page) {
 	));
 	
 	echo elgg_view_page($title, $layout, 'theme_preview');
+	return true;
 }

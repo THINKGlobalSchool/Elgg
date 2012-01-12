@@ -34,7 +34,7 @@ function parse_urls($text) {
 				$url = trim($url, \'.\');
 			}
 			$urltext = str_replace("/", "/<wbr />", $url);
-			return "<a href=\"$url\" style=\"text-decoration:underline;\">$urltext</a>$period";
+			return "<a href=\"$url\">$urltext</a>$period";
 		'
 	), $text);
 
@@ -67,7 +67,7 @@ function autop($pee, $br = 1) {
 	$pee = preg_replace('/\n?(.+?)(?:\n\s*\n|\z)/s', "<p>$1</p>\n", $pee); // make paragraphs, including one at the end
 	$pee = preg_replace('|<p>\s*?</p>|', '', $pee); // under certain strange conditions it could create a P of entirely whitespace
 	$pee = preg_replace('!<p>([^<]+)\s*?(</(?:div|address|form)[^>]*>)!', "<p>$1</p>$2", $pee);
-	$pee = preg_replace( '|<p>|', "$1<p>", $pee );
+	$pee = preg_replace('|<p>|', "$1<p>", $pee);
 	$pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee); // don't pee all over a tag
 	$pee = preg_replace("|<p>(<li.+?)</p>|", "$1", $pee); // problem with nested lists
 	$pee = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $pee);
@@ -81,11 +81,11 @@ function autop($pee, $br = 1) {
 	}
 	$pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*<br />!', "$1", $pee);
 	$pee = preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)!', '$1', $pee);
-//	if (strpos($pee, '<pre') !== false) {
-//		mind the space between the ? and >.  Only there because of the comment.
-//		$pee = preg_replace_callback('!(<pre.*? >)(.*?)</pre>!is', 'clean_pre', $pee );
-//	}
-	$pee = preg_replace( "|\n</p>$|", '</p>', $pee );
+	//if (strpos($pee, '<pre') !== false) {
+	//	mind the space between the ? and >.  Only there because of the comment.
+	//	$pee = preg_replace_callback('!(<pre.*? >)(.*?)</pre>!is', 'clean_pre', $pee );
+	//}
+	$pee = preg_replace("|\n</p>$|", '</p>', $pee);
 
 	return $pee;
 }
@@ -198,6 +198,7 @@ function elgg_format_attributes(array $attrs) {
  * @param array $vars The raw $vars array with all it's dirtiness (config, url, etc.)
  *
  * @return array The array, ready to be used in elgg_format_attributes().
+ * @access private
  */
 function elgg_clean_vars(array $vars = array()) {
 	unset($vars['config']);
@@ -215,6 +216,14 @@ function elgg_clean_vars(array $vars = array()) {
 		unset($vars['internalid']);
 	}
 
+	if (isset($vars['__ignoreInternalid'])) {
+		unset($vars['__ignoreInternalid']);
+	}
+
+	if (isset($vars['__ignoreInternalname'])) {
+		unset($vars['__ignoreInternalname']);
+	}
+
 	return $vars;
 }
 
@@ -225,7 +234,7 @@ function elgg_clean_vars(array $vars = array()) {
  *
  * @example
  * elgg_normalize_url('');                   // 'http://my.site.com/'
- * elgg_normalize_url('dashboard');       // 'http://my.site.com/dashboard'
+ * elgg_normalize_url('dashboard');          // 'http://my.site.com/dashboard'
  * elgg_normalize_url('http://google.com/'); // no change
  * elgg_normalize_url('//google.com/');      // no change
  *
@@ -234,13 +243,37 @@ function elgg_clean_vars(array $vars = array()) {
  * @return string The absolute url
  */
 function elgg_normalize_url($url) {
-	// 'http://example.com', 'https://example.com', '//example.com'
-	// '#target', '?query=string'
-	if (preg_match("#^(\#|\?|(https?:)?//)#i", $url)) {
+	// see https://bugs.php.net/bug.php?id=51192
+	// from the bookmarks save action.
+	$php_5_2_13_and_below = version_compare(PHP_VERSION, '5.2.14', '<');
+	$php_5_3_0_to_5_3_2 = version_compare(PHP_VERSION, '5.3.0', '>=') &&
+			version_compare(PHP_VERSION, '5.3.3', '<');
+
+	$validated = false;
+	if ($php_5_2_13_and_below || $php_5_3_0_to_5_3_2) {
+		$tmp_address = str_replace("-", "", $url);
+		$validated = filter_var($tmp_address, FILTER_VALIDATE_URL);
+	} else {
+		$validated = filter_var($url, FILTER_VALIDATE_URL);
+	}
+
+	// work around for handling absoluate IRIs (RFC 3987) - see #4190
+	if (!$validated && (strpos($url, 'http:') === 0) || (strpos($url, 'https:') === 0)) {
+		$validated = true;
+	}
+
+	if ($validated) {
+		// all normal URLs including mailto:
 		return $url;
 
+	} elseif (preg_match("#^(\#|\?|//)#i", $url)) {
+		// '//example.com' (Shortcut for protocol.)
+		// '?query=test', #target
+		return $url;
+	
 	} elseif (stripos($url, 'javascript:') === 0) {
 		// 'javascript:'
+		// Not covered in FILTER_VALIDATE_URL
 		return $url;
 
 	} elseif (preg_match("#^[^/]*\.php(\?.*)?$#i", $url)) {
@@ -278,6 +311,9 @@ function elgg_get_friendly_title($title) {
 	}
 
 	//$title = iconv('UTF-8', 'ASCII//TRANSLIT', $title);
+
+	// use A-Za-z0-9_ instead of \w because \w is locale sensitive
+	$title = preg_replace("/[^A-Za-z0-9_ ]/", "", $title);
 	$title = preg_replace("/[^\w ]/", "", $title);
 	$title = str_replace(" ", "-", $title);
 	$title = str_replace("--", "-", $title);

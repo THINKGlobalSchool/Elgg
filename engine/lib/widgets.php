@@ -257,6 +257,7 @@ function elgg_get_widget_types($context = "", $exact = false) {
  * Regsiter entity of object, widget as ElggWidget objects
  *
  * @return void
+ * @access private
  */
 function elgg_widget_run_once() {
 	add_subtype("object", "widget", "ElggWidget");
@@ -266,6 +267,7 @@ function elgg_widget_run_once() {
  * Function to initialize widgets functionality
  *
  * @return void
+ * @access private
  */
 function elgg_widgets_init() {
 	elgg_register_action('widgets/save');
@@ -281,7 +283,26 @@ function elgg_widgets_init() {
  * Gets a list of events to create default widgets for and
  * register menu items for default widgets with the admin section.
  *
+ * A plugin that wants to register a new context for default widgets should
+ * register for the plugin hook 'get_list', 'default_widgets'. The handler 
+ * can register the new type of default widgets by adding an associate array to
+ * the return value array like this:
+ * array(
+ *     'name' => elgg_echo('profile'),
+ *     'widget_context' => 'profile',
+ *     'widget_columns' => 3,
+ *
+ *     'event' => 'create',
+ *     'entity_type' => 'user',
+ *     'entity_subtype' => ELGG_ENTITIES_ANY_VALUE,
+ * );
+ *
+ * The first set of keys define information about the new type of default
+ * widgets and the second set determine what event triggers the creation of the
+ * new widgets.
+ *
  * @return void
+ * @access private
  */
 function elgg_default_widgets_init() {
 	global $CONFIG;
@@ -295,77 +316,84 @@ function elgg_default_widgets_init() {
 		// override permissions for creating widget on logged out / just created entities
 		elgg_register_plugin_hook_handler('container_permissions_check', 'object', 'elgg_default_widgets_permissions_override');
 
+		// only register the callback once per event
+		$events = array();
 		foreach ($default_widgets as $info) {
-			elgg_register_event_handler($info['event'], $info['entity_type'], 'elgg_default_widgets_hook');
+			$events[$info['event'] . ',' . $info['entity_type']] = $info;
+		}
+		foreach ($events as $info) {
+			elgg_register_event_handler($info['event'], $info['entity_type'], 'elgg_create_default_widgets');
 		}
 	}
 }
 
 /**
- * Checks for plugins who have registered default widgets and
- * hooks into events to save.
+ * Creates default widgets
+ *
+ * This plugin hook handler is registered for events based on what kinds of
+ * default widgets have been registered. See elgg_default_widgets_init() for
+ * information on registering new default widget contexts.
  *
  * @param string $event  The event
  * @param string $type   The type of object
- * @param object $object The object
- * @return null
+ * @param object $entity The entity being created
+ * @return void
+ * @access private
  */
-function elgg_default_widgets_hook($event, $type, $object) {
+function elgg_create_default_widgets($event, $type, $entity) {
 	$default_widget_info = elgg_get_config('default_widget_info');
 
-	if (!$default_widget_info) {
-		return null;
+	if (!$default_widget_info || !$entity) {
+		return;
 	}
 
-	$subtype = $object->getSubtype();
+	$type = $entity->getType();
+	$subtype = $entity->getSubtype();
 
 	// event is already guaranteed by the hook registration.
 	// need to check subtype and type.
-	foreach ($default_widget_info as $temp) {
-		if ($temp['entity_type'] == $type && $temp['entity_subtype'] == $subtype) {
-			$info = $temp;
-			break;
+	foreach ($default_widget_info as $info) {
+		if ($info['entity_type'] == $type) {
+			if ($info['entity_subtype'] == ELGG_ENTITIES_ANY_VALUE || $info['entity_subtype'] == $subtype) {
+
+				// need to be able to access everything
+				$old_ia = elgg_set_ignore_access(true);
+				elgg_push_context('create_default_widgets');
+
+				// pull in by widget context with widget owners as the site
+				// not using elgg_get_widgets() because it sorts by columns and we don't care right now.
+				$options = array(
+					'type' => 'object',
+					'subtype' => 'widget',
+					'owner_guid' => elgg_get_site_entity()->guid,
+					'private_setting_name' => 'context',
+					'private_setting_value' => $info['widget_context'],
+					'limit' => 0
+				);
+
+				$widgets = elgg_get_entities_from_private_settings($options);
+
+				foreach ($widgets as $widget) {
+					// change the container and owner
+					$new_widget = clone $widget;
+					$new_widget->container_guid = $entity->guid;
+					$new_widget->owner_guid = $entity->guid;
+
+					// pull in settings
+					$settings = get_all_private_settings($widget->guid);
+
+					foreach ($settings as $name => $value) {
+						$new_widget->$name = $value;
+					}
+
+					$new_widget->save();
+				}
+
+				elgg_set_ignore_access($old_ia);
+				elgg_pop_context();
+			}
 		}
 	}
-
-	// need to be able to access everything
-	$old_ia = elgg_get_ignore_access(true);
-	elgg_push_context('create_default_widgets');
-
-	// pull in by widget context with widget owners as the site
-	// not using elgg_get_widgets() because it sorts by columns and we don't care right now.
-	$options = array(
-		'type' => 'object',
-		'subtype' => 'widget',
-		'owner_guid' => elgg_get_site_entity()->guid,
-		'private_setting_name' => 'context',
-		'private_setting_value' => $info['context'],
-		'limit' => 0
-	);
-
-	$widgets = elgg_get_entities_from_private_settings($options);
-
-	foreach ($widgets as $widget) {
-		// change the container and owner
-		$new_widget = clone $widget;
-		$new_widget->container_guid = $object->guid;
-		$new_widget->owner_guid = $object->guid;
-
-		// pull in settings
-		$settings = get_all_private_settings($widget->guid);
-
-		foreach ($settings as $name => $value) {
-			$new_widget->$name = $value;
-		}
-
-		$new_widget->save();
-	}
-
-	elgg_get_ignore_access($old_ia);
-	elgg_pop_context();
-
-	// failure here shouldn't stop the event.
-	return null;
 }
 
 /**
@@ -376,6 +404,7 @@ function elgg_default_widgets_hook($event, $type, $object) {
  * @param string $return Value
  * @param mixed  $params Params
  * @return true|null
+ * @access private
  */
 function elgg_default_widgets_permissions_override($hook, $type, $return, $params) {
 	if ($type == 'object' && $params['subtype'] == 'widget') {

@@ -371,13 +371,18 @@ abstract class ElggEntity extends ElggData implements
 	 * Deletes all metadata on this object (metadata.entity_guid = $this->guid).
 	 * If you pass a name, only metadata matching that name will be deleted.
 	 *
-	 * @warning Calling this with no or empty arguments will clear all metadata on the entity.
+	 * @warning Calling this with no $name will clear all metadata on the entity.
 	 *
-	 * @param null|string $name The metadata name to remove.
+	 * @param null|string $name The name of the metadata to remove.
 	 * @return bool
 	 * @since 1.8
 	 */
 	public function deleteMetadata($name = null) {
+
+		if (!$this->guid) {
+			return false;
+		}
+
 		$options = array(
 			'guid' => $this->guid,
 			'limit' => 0
@@ -1174,16 +1179,16 @@ abstract class ElggEntity extends ElggData implements
 			return $this->icon_override[$size];
 		}
 
-		$url = "_graphics/icons/default/$size.png";
-		$url = elgg_normalize_url($url);
-
 		$type = $this->getType();
 		$params = array(
 			'entity' => $this,
 			'size' => $size,
 		);
 
-		$url = elgg_trigger_plugin_hook('entity:icon:url', $type, $params, $url);
+		$url = elgg_trigger_plugin_hook('entity:icon:url', $type, $params, null);
+		if ($url == null) {
+			$url = "_graphics/icons/default/$size.png";
+		}
 
 		return elgg_normalize_url($url);
 	}
@@ -1330,6 +1335,9 @@ abstract class ElggEntity extends ElggData implements
 				$this->attributes['tables_loaded']++;
 			}
 
+			// guid needs to be an int  http://trac.elgg.org/ticket/4111
+			$this->attributes['guid'] = (int)$this->attributes['guid'];
+
 			// Cache object handle
 			if ($this->attributes['guid']) {
 				cache_entity($this);
@@ -1429,10 +1437,11 @@ abstract class ElggEntity extends ElggData implements
 	 *
 	 * @param string $location String representation of the location
 	 *
-	 * @return true
+	 * @return bool
 	 */
 	public function setLocation($location) {
-		return $this->location = $location;
+		$this->location = $location;
+		return true;
 	}
 
 	/**
@@ -1441,7 +1450,7 @@ abstract class ElggEntity extends ElggData implements
 	 * @param float $lat  Latitude
 	 * @param float $long Longitude
 	 *
-	 * @return true
+	 * @return bool
 	 * @todo Unimplemented
 	 */
 	public function setLatLong($lat, $long) {
@@ -1454,20 +1463,20 @@ abstract class ElggEntity extends ElggData implements
 	/**
 	 * Return the entity's latitude.
 	 *
-	 * @return int
+	 * @return float
 	 * @todo Unimplemented
 	 */
 	public function getLatitude() {
-		return $this->get('geo:lat');
+		return (float)$this->get('geo:lat');
 	}
 
 	/**
 	 * Return the entity's longitude
 	 *
-	 * @return Int
+	 * @return float
 	 */
 	public function getLongitude() {
-		return $this->get('geo:long');
+		return (float)$this->get('geo:long');
 	}
 
 	/*
@@ -1574,36 +1583,36 @@ abstract class ElggEntity extends ElggData implements
 		foreach ($this->attributes as $k => $v) {
 			$meta = NULL;
 
-			if (in_array( $k, $exportable_values)) {
+			if (in_array($k, $exportable_values)) {
 				switch ($k) {
-					case 'guid' : 			// Dont use guid in OpenDD
-					case 'type' :			// Type and subtype already taken care of
-					case 'subtype' :
-					break;
+					case 'guid':			// Dont use guid in OpenDD
+					case 'type':			// Type and subtype already taken care of
+					case 'subtype':
+						break;
 
-					case 'time_created' :	// Created = published
+					case 'time_created':	// Created = published
 						$odd->setAttribute('published', date("r", $v));
-					break;
+						break;
 
-					case 'site_guid' : // Container
+					case 'site_guid':	// Container
 						$k = 'site_uuid';
 						$v = guid_to_uuid($v);
 						$meta = new ODDMetaData($uuid . "attr/$k/", $uuid, $k, $v);
-					break;
+						break;
 
-					case 'container_guid' : // Container
+					case 'container_guid':	// Container
 						$k = 'container_uuid';
 						$v = guid_to_uuid($v);
 						$meta = new ODDMetaData($uuid . "attr/$k/", $uuid, $k, $v);
-					break;
+						break;
 
-					case 'owner_guid' :			// Convert owner guid to uuid, this will be stored in metadata
+					case 'owner_guid':			// Convert owner guid to uuid, this will be stored in metadata
 						$k = 'owner_uuid';
 						$v = guid_to_uuid($v);
 						$meta = new ODDMetaData($uuid . "attr/$k/", $uuid, $k, $v);
-					break;
+						break;
 
-					default :
+					default:
 						$meta = new ODDMetaData($uuid . "attr/$k/", $uuid, $k, $v);
 				}
 

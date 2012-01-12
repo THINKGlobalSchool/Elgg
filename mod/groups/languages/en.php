@@ -61,6 +61,8 @@ $english = array(
 	'groups:search:tags' => "tag",
 	'groups:search:title' => "Search for groups tagged with '%s'",
 	'groups:search:none' => "No matching groups were found",
+	'groups:search_in_group' => "Search in this group",
+	'groups:acl' => "Group: %s",
 
 	'groups:activity' => "Group activity",
 	'groups:enableactivity' => 'Enable group activity',
@@ -69,9 +71,9 @@ $english = array(
 	'groups:notfound' => "Group not found",
 	'groups:notfound:details' => "The requested group either does not exist or you do not have access to it",
 
-	'groups:requests:none' => 'There are no outstanding membership requests at this time.',
+	'groups:requests:none' => 'There are no current membership requests.',
 
-	'groups:invitations:none' => 'There are no outstanding invitations at this time.',
+	'groups:invitations:none' => 'There are no current invitations.',
 
 	'item:object:groupforumtopic' => "Discussion topics",
 
@@ -113,6 +115,8 @@ $english = array(
 	'discussion:add' => 'Add discussion topic',
 	'discussion:latest' => 'Latest discussion',
 	'discussion:group' => 'Group discussion',
+	'discussion:none' => 'No discussion',
+	'discussion:reply:title' => 'Reply by %s',
 
 	'discussion:topic:created' => 'The discussion topic was created.',
 	'discussion:topic:updated' => 'The discussion topic was updated.',

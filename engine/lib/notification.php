@@ -236,6 +236,7 @@ function set_user_notification_setting($user_guid, $method, $value) {
  * @param array      $params  Optional parameters (none taken in this instance)
  *
  * @return bool
+ * @access private
  */
 function email_notify_handler(ElggEntity $from, ElggUser $to, $subject, $message,
 array $params = NULL) {
@@ -359,6 +360,7 @@ function elgg_send_email($from, $to, $subject, $body, array $params = NULL) {
  * Correctly initialise notifications and register the email handler.
  *
  * @return void
+ * @access private
  */
 function notification_init() {
 	// Register a notification handler for the default email method
@@ -375,6 +377,7 @@ function notification_init() {
  *
  * @return void
  * @todo why can't this call action(...)?
+ * @access private
  */
 function notification_user_settings_save() {
 	global $CONFIG;
@@ -447,6 +450,7 @@ function remove_notification_interest($user_guid, $author_guid) {
  * @param mixed  $object      The object created
  *
  * @return void
+ * @access private
  */
 function object_notifications($event, $object_type, $object) {
 	// We only want to trigger notification events for ElggEntities
@@ -483,6 +487,7 @@ function object_notifications($event, $object_type, $object) {
 			// (Person defined by container_guid so we can also subscribe to groups if we want)
 			foreach ($NOTIFICATION_HANDLERS as $method => $foo) {
 				$interested_users = elgg_get_entities_from_relationship(array(
+					'site_guids' => ELGG_ENTITIES_ANY_VALUE,
 					'relationship' => 'notify' . $method,
 					'relationship_guid' => $object->container_guid,
 					'inverse_relationship' => TRUE,

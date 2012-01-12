@@ -18,7 +18,7 @@
  */
 function get_dir_size($dir, $totalsize = 0) {
 	$handle = @opendir($dir);
-	while ($file = @readdir ($handle)) {
+	while ($file = @readdir($handle)) {
 		if (eregi("^\.{1,2}$", $file)) {
 			continue;
 		}
@@ -465,6 +465,7 @@ function set_default_filestore(ElggFilestore $filestore) {
  * ElggFile.
  *
  * @return void
+ * @access private
  */
 function filestore_run_once() {
 	// Register a class
@@ -473,16 +474,19 @@ function filestore_run_once() {
 
 /**
  * Initialise the file modules.
- * Listens to system boot and registers any appropriate file types and classes
+ * Listens to system init and configures the default filestore
  *
  * @return void
+ * @access private
  */
 function filestore_init() {
 	global $CONFIG;
 
 	// Now register a default filestore
-	set_default_filestore(new ElggDiskFilestore($CONFIG->dataroot));
-
+	if (isset($CONFIG->dataroot)) {
+		set_default_filestore(new ElggDiskFilestore($CONFIG->dataroot));
+	}
+	
 	// Now run this stuff, but only once
 	run_function_once("filestore_run_once");
 }
@@ -496,6 +500,7 @@ function filestore_init() {
  * @param mixed  $params Params
  *
  * @return array
+ * @access private
  */
 function filestore_test($hook, $type, $value, $params) {
 	global $CONFIG;

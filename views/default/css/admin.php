@@ -38,26 +38,26 @@ html, body {
 	margin-bottom: 1px;
 }
 img {
-	border-width:0;
-	border-color:transparent;
+	border-width: 0;
+	border-color: transparent;
 }
 :focus {
-	outline:0 none;
+	outline: 0 none;
 }
 ol, ul {
 	list-style: none;
 }
 em, i {
-	font-style:italic;
+	font-style: italic;
 }
 ins {
-	text-decoration:none;
+	text-decoration: none;
 }
 del {
 	text-decoration:line-through;
 }
 strong, b {
-	font-weight:bold;
+	font-weight: bold;
 }
 table {
 	border-collapse: collapse;
@@ -79,7 +79,6 @@ blockquote, q {
 /* ***************************************
 	BASICS
 *************************************** */
-
 body {
 	background-color: #eee;
 	font-size: 80%;
@@ -107,7 +106,12 @@ a:hover {
 	text-decoration: underline;
 }
 pre, code {
-	background: #EBF5FF;
+	background-color: #EEE;
+	border: 1px solid #DDD;
+	color: #444;
+	overflow: auto;
+	margin: 15px 0;
+	padding: 5px;
 }
 blockquote {
 	background: #EBF5FF;
@@ -116,15 +120,8 @@ p {
 	margin-bottom: 15px;
 }
 
-.elgg-output dt { font-weight: bold }
-.elgg-output dd { margin: 0 0 1em 2em }
-
-table.mceLayout {
-	width:100% !important;
-}
-
 .clearfloat {
-	clear:both;
+	clear: both;
 }
 
 /* Clearfix! */
@@ -146,23 +143,9 @@ table.mceLayout {
 	visibility: hidden;
 	height: 0 !important;
 	line-height: 0;
+	overflow: hidden;
 	font-size: xx-large;
 	content: " x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x ";
-}
-.hidden {
-	display:none;
-}
-.centered {
-	margin:0 auto;
-}
-.center {
-	text-align: center;
-}
-.float {
-	float: left;
-}
-.float-alt {
-	float: right;
 }
 
 /* ***************************************
@@ -211,7 +194,7 @@ table.mceLayout {
 .elgg-menu-user li {
 	display: inline;
 }
-.elgg-menu-user li:after{
+.elgg-menu-user li:after {
 	content: "|";
 	display: inline-block;
 	font-weight: normal;
@@ -222,6 +205,9 @@ table.mceLayout {
 	content: "";
 }
 
+/* ***************************************
+	MESSAGES
+*************************************** */
 .elgg-page-messages {
 	padding: 20px 0 0;
 	width: 500px;
@@ -248,13 +234,40 @@ table.mceLayout {
 	border-color: #c6d880;
 }
 
+.elgg-admin-notices {
+	padding-bottom: 15px;
+}
+.elgg-admin-notices p {
+	background-color: #BDE5F8;
+	color: black;
+	border: 1px solid blue;
+	font-weight: bold;
+	padding: 3px 0px 3px 10px;
+
+	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
+	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
+
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+.elgg-admin-notices a.elgg-admin-notice {
+	float: right;
+	text-decoration: none;
+}
+
+.elgg-admin-notices a {
+	text-decoration: underline;
+}
+
 /* ***************************************
 	BODY
 *************************************** */
 .elgg-page-body {
 	padding: 20px 0;
 }
-.elgg-main  {
+.elgg-main {
 	background-color: #fff;
 	border: 1px solid #ccc;
 	padding: 20px;
@@ -312,6 +325,9 @@ table.mceLayout {
 }
 .elgg-module-main > .elgg-head {
 	margin-bottom: 5px;
+}
+.elgg-module-info > .elgg-head {
+	margin-bottom: 10px;
 }
 .elgg-module-inline {
 	margin: 20px 0;
@@ -384,31 +400,27 @@ table.mceLayout {
 	float: right;
 	margin-left: 5px;
 }
-
 .elgg-item {
 	margin: 3px;
 }
-.elgg-menu-metadata {
-	float: right;
-	margin-left: 15px;
-	font-size: 90%;
-}
-.elgg-menu-metadata > li {
-	float: left;
-	margin-left: 15px;
-}
-.elgg-menu-metadata, .elgg-menu-metadata a {
-	color: #aaa;
-}
-.elgg-simple-list li {
+.elgg-list-simple li {
 	margin-bottom: 5px;
 }
+.elgg-list-distinct {
+	border-top: 1px dotted #CCCCCC;
+	margin: 5px 0;
+	clear: both;
+}
+.elgg-list-distinct > li {
+	border-bottom: 1px dotted #CCCCCC;
+}
+
 /* ***************************************
 	FORMS AND INPUT
 *************************************** */
 label {
 	font-weight: bold;
-	color:#333333;
+	color: #333333;
 	font-size: 110%;
 }
 fieldset > div {
@@ -421,7 +433,7 @@ input {
 	font: 120% Arial, Helvetica, sans-serif;
 	padding: 5px;
 	border: 1px solid #ccc;
-	color:#666;
+	color: #666;
 	
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -432,50 +444,79 @@ input {
 .elgg-input-tags,
 .elgg-input-url,
 .elgg-input-plaintext {
-	width:98%;
+	width: 98%;
 }
 textarea {
 	height: 100px;
 }
-input[type="submit"], .elgg-button-submit, .elgg-button-action, .elgg-button-cancel {
+.elgg-input-thin {
+	width: 400px;
+}
+.elgg-input-natural {
+	width: auto;
+}
+
+.elgg-button {
 	font-size: 14px;
 	font-weight: bold;
-	color: white;
 	text-decoration: none;
-	background-color: #333;
-	border-color: #333;
-	
+
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 
-	display: inline-block;
 	width: auto;
 	padding: 2px 4px;
-	margin: 10px 5px 10px 0;
 	cursor: pointer;
 	outline: none;
 }
-input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover {
+a.elgg-button {
+	padding: 3px 6px;
+}
+
+.elgg-button + .elgg-button {
+	margin-left: 5px;
+}
+
+.elgg-button-submit,
+.elgg-button-action {
+	color: white;
+	border: 1px solid #333;
+	background-color: #333;
+	text-shadow: 1px 1px 0px black;
+}
+.elgg-button-submit:hover,
+.elgg-button-action:hover {
 	color: white;
 	background-color: #000;
 	text-decoration: none;
 }
-.elgg-button-submit, .elgg-button-action, .elgg-button-cancel {
-	padding: 4px 8px;
+.elgg-button-submit.elgg-state-disabled,
+.elgg-button-action.elgg-state-disabled {
+	color: #999;
+	cursor: default;
 }
+
 .elgg-button-cancel {
 	color: #333;
 	background-color: #999;
+	border: 1px solid #999;
 }
 .elgg-button-cancel:hover {
 	color: #222;
 	background-color: #666;
 	text-decoration: none;
 }
-.elgg-button-action.elgg-state-disabled {
-	background-color: #aaa;
+
+.elgg-form-useradd input[type=text],
+.elgg-form-useradd input[type=password] {
+	width: 300px;
 }
+
+.elgg-form-settings {
+	max-width: 800px;
+}
+
 /* **************************************
      DATE PICKER
 *************************************** */
@@ -546,6 +587,7 @@ input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover
     color: #333;
 	background: #ddd;
 }
+
 /* ***************************************
 	PAGINATION
 *************************************** */
@@ -571,14 +613,13 @@ input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover
 	color: white;
 	text-decoration: none;
 }
-
-.elgg-pagination .elgg-state-disabled {
+.elgg-pagination .elgg-state-disabled span {
 	color: #CCC;
 	border-color: #CCC;
 }
-.elgg-pagination .elgg-state-selected {
-	color: #555;
-	border-color: #555;
+.elgg-pagination .elgg-state-selected span {
+	color: #000;
+	border-color: #ccc;
 }
 
 /* ***************************************
@@ -636,7 +677,6 @@ input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
-
 .elgg-admin-sidebar-menu a:hover {
 	text-decoration: none;
 	background: black;
@@ -646,12 +686,10 @@ input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover
 .elgg-admin-sidebar-menu li.elgg-state-selected > a {
 	background-color: #BBB;
 }
-
 .elgg-admin-sidebar-menu .elgg-menu-closed:before {
 	content: "\25B8";
 	padding-right: 4px;
 }
-
 .elgg-admin-sidebar-menu .elgg-menu-opened:before {
 	content: "\25BE";
 	padding-right: 4px;
@@ -676,7 +714,6 @@ input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover
 .elgg-menu-title {
 	float: right;
 }
-
 .elgg-menu-title > li {
 	display: inline-block;
 	margin-left: 4px;
@@ -685,12 +722,13 @@ input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover
 /* ***************************************
 	FOOTER MENU
 *************************************** */
-.elgg-menu-footer {color:gray}
-
+.elgg-menu-footer {
+	color: gray;
+}
 .elgg-menu-footer li {
 	float: left;
 }
-.elgg-menu-footer li:after{
+.elgg-menu-footer li:after {
 	content: "\007C";
 	display: inline-block;
 	padding: 0 4px 0 4px;
@@ -698,6 +736,20 @@ input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover
 }
 .elgg-menu-footer li:last-child:after {
 	content: "";
+}
+
+/* ***************************************
+	GENERAL MENU
+*************************************** */
+.elgg-menu-general > li,
+.elgg-menu-general > li > a {
+	display: inline-block;
+	color: #999;
+}
+
+.elgg-menu-general > li:after {
+	content: "\007C";
+	padding: 0 4px;
 }
 
 /* ***************************************
@@ -744,18 +796,68 @@ input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover
 }
 
 /* ***************************************
+	ENTITY MENU
+*************************************** */
+<?php // height depends on line height/font size ?>
+.elgg-menu-entity, elgg-menu-annotation {
+	float: right;
+	margin-left: 15px;
+	font-size: 90%;
+	color: #666;
+	line-height: 16px;
+	height: 16px;
+}
+.elgg-menu-entity > li, .elgg-menu-annotation > li {
+	margin-left: 15px;
+}
+.elgg-menu-entity > li > a, .elgg-menu-annotation > li > a {
+	color: #aaa;
+}
+<?php // need to override .elgg-menu-hz ?>
+.elgg-menu-entity > li > a, .elgg-menu-annotation > li > a {
+	display: block;
+}
+.elgg-menu-entity > li > span, .elgg-menu-annotation > li > span {
+	vertical-align: baseline;
+}
+
+/* ***************************************
+	WIDGET MENU
+*************************************** */
+.elgg-menu-widget > li {
+	position: absolute;
+	top: 4px;
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	padding: 2px 2px 0 0;
+}
+.elgg-menu-widget > .elgg-menu-item-collapse {
+	left: 5px;
+}
+.elgg-menu-widget > .elgg-menu-item-delete {
+	right: 5px;
+}
+.elgg-menu-widget > .elgg-menu-item-settings {
+	right: 25px;
+}
+
+/* ***************************************
 	MORE MENUS
 *************************************** */
 /* Horizontal menus w/ separator support */
 .elgg-menu-hz > li,
 .elgg-menu-hz > li:after,
 .elgg-menu-hz > li > a {
-	display:inline-block;
-	vertical-align:middle;
+	display: inline-block;
+	vertical-align: middle;
 }
 /* Allow inline image blocks in horizontal menus */
 .elgg-menu-hz .elgg-body:after {
 	content: '.';
+}
+.elgg-menu > li:last-child::after {
+	display: none;
 }
 .elgg-menu-admin-footer a {
 	color: #eee;
@@ -765,6 +867,19 @@ input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover
 }
 .elgg-menu-longtext {
 	float: right;
+}
+.elgg-menu-metadata {
+	list-style-type: none;
+	float: right;
+	margin-left: 15px;
+	font-size: 90%;
+}
+.elgg-menu-metadata > li {
+	float: left;
+	margin-left: 15px;
+}
+.elgg-menu-metadata, .elgg-menu-metadata a {
+	color: #aaa;
 }
 
 /* ***************************************
@@ -826,22 +941,16 @@ input[type="submit"]:hover, .elgg-button-submit:hover, .elgg-button-action:hover
 	height: 26px;
 	overflow: hidden;
 }
+.elgg-module-widget.elgg-state-draggable .elgg-widget-handle {
+	cursor: move;
+}
 .elgg-module-widget > .elgg-head h3 {
 	float: left;
 	padding: 4px 45px 0 20px;
 	color: #333;
 }
-.elgg-module-widget > .elgg-head a {
-	position: absolute;
-	top: 4px;
-	display: inline-block;
-	width: 18px;
-	height: 18px;
-	padding: 2px 2px 0 0;
-}
 
 .elgg-widget-collapse-button {
-	left: 5px;
 	color: #c5c5c5;
 	text-decoration: none;
 }
@@ -855,12 +964,6 @@ a.elgg-widget-collapse-button:before {
 }
 a.elgg-widget-collapsed:before {
 	content: "\25BA";
-}
-.elgg-widget-delete-button {
-	right: 5px;
-}
-.elgg-widget-edit-button {
-	right: 25px;
 }
 .elgg-module-widget > .elgg-body {
 	border-top: 1px solid #dedede;
@@ -926,81 +1029,6 @@ a.elgg-widget-collapsed:before {
 	width: 83.33%;
 }
 
-
-.elgg-subtext {
-	color: #666;
-	font-size: 85%;
-	line-height: 1.2em;
-	font-style: italic;
-	margin-bottom: 5px;
-}
-
-.elgg-longtext-control {
-	margin-left: 14px;
-	font-size: 80%;
-	cursor: pointer;
-}
-
-/* ***************************************
-	Spacing (from OOCSS)
-*************************************** */
-.pan{padding:0}
-.pas{padding:5px}
-.pam{padding:10px}
-.pal{padding:20px}
-.ptn{padding-top:0}
-.pts{padding-top:5px}
-.ptm{padding-top:10px}
-.ptl{padding-top:20px}
-.prn{padding-right:0}
-.prs{padding-right:5px}
-.prm{padding-right:10px}
-.prl{padding-right:20px}
-.pbn{padding-bottom:0}
-.pbs{padding-bottom:5px}
-.pbm{padding-bottom:10px}
-.pbl{padding-bottom:20px}
-.pln{padding-left:0}
-.pls{padding-left:5px}
-.plm{padding-left:10px}
-.pll{padding-left:20px}
-.phn{padding-left:0;padding-right:0}
-.phs{padding-left:5px;padding-right:5px}
-.phm{padding-left:10px;padding-right:10px}
-.phl{padding-left:20px;padding-right:20px}
-.pvn{padding-top:0;padding-bottom:0}
-.pvs{padding-top:5px;padding-bottom:5px}
-.pvm{padding-top:10px;padding-bottom:10px}
-.pvl{padding-top:20px;padding-bottom:20px}
-.man{margin:0}
-.mas{margin:5px}
-.mam{margin:10px}
-.mal{margin:20px}
-.mtn{margin-top:0}
-.mts{margin-top:5px}
-.mtm{margin-top:10px}
-.mtl{margin-top:20px}
-.mrn{margin-right:0}
-.mrs{margin-right:5px}
-.mrm{margin-right:10px}
-.mrl{margin-right:20px}
-.mbn{margin-bottom:0}
-.mbs{margin-bottom:5px}
-.mbm{margin-bottom:10px}
-.mbl{margin-bottom:20px}
-.mln{margin-left:0}
-.mls{margin-left:5px}
-.mlm{margin-left:10px}
-.mll{margin-left:20px}
-.mhn{margin-left:0;margin-right:0}
-.mhs{margin-left:5px;margin-right:5px}
-.mhm{margin-left:10px;margin-right:10px}
-.mhl{margin-left:20px;margin-right:20px}
-.mvn{margin-top:0;margin-bottom:0}
-.mvs{margin-top:5px;margin-bottom:5px}
-.mvm{margin-top:10px;margin-bottom:10px}
-.mvl{margin-top:20px;margin-bottom:20px}
-
 /* ***************************************
 	ICONS
 *************************************** */
@@ -1049,6 +1077,7 @@ a.elgg-widget-collapsed:before {
 *************************************** */
 .elgg-avatar {
 	position: relative;
+	display: inline-block;
 }
 .elgg-avatar > a > img {
 	display: block;
@@ -1156,94 +1185,32 @@ a.elgg-widget-collapsed:before {
 	height: 200px;
 }
 
-
-.elgg-menu-metadata {
-	list-style-type: none;
-	float: right;
-	margin-left: 15px;
-	font-size: 90%;
-}
-.elgg-menu-metadata > li {
-	float: left;
-	margin-left: 15px;
-}
-
-.right {float:right}
-.elgg-toggle {cursor:pointer}
-
-<?php //@todo elgg-drag-handle instead? ?>
-.elgg-state-draggable .elgg-head {
-	cursor: move;
-}
-
 /* ***************************************
-	ADMIN MISC
-*************************************** */
-
-.elgg-instructs {
-	max-width: 600px;
-}
-
-.manifest_file {
-	background-color:#eee;
-
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	border-radius: 8px;
-
-	padding:5px 10px;
-	margin:4px 0;
-}
-
-
-.plugin_controls {
-	padding: 3px 3px 3px 0;
-	font-weight: bold;
-	float: left;
-	width: 150px;
-}
-form.admin_plugins_simpleview .elgg-button-submit {
-	margin-right:20px;
-}
-.plugin_info {
-	margin: 3px;
-	padding-left: 150px;
-	display: block;
-}
-.plugin_metadata {
-	display:block;
-	color:#999;
-}
-.plugin_name input[type="checkbox"] {
-	margin-right: 10px;
-}
-ul.admin_plugins {
-	margin-bottom: 0;
-	padding-left: 0;
-	list-style: none;
-}
+	PLUGINS
+**************************************** */
 .elgg-plugin {
-	border:1px solid #999;
-	margin:0 0 5px;
-	padding:0 7px 4px 10px;
+	border: 1px solid #999;
+	margin: 0 0 5px;
+	padding: 0 7px 4px 10px;
 
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
-
+.elgg-plugin.elgg-state-draggable > .elgg-image-block .elgg-head {
+	cursor: move;
+}
 .elgg-plugin p {
-	margin:0;
-	padding:0;
+	margin: 0;
 }
 .elgg-plugin h3 {
-	color:black;
+	color: black;
 	padding-bottom: 10px;
 }
-.plugin_settings {
+.elgg-plugin-settings {
 	font-weight: normal;
+	font-size: 0.9em;
 }
-
 .elgg-plugin-screenshot {
 	display: inline;
 }
@@ -1263,64 +1230,43 @@ ul.admin_plugins {
 	border-radius: 8px;
 }
 .elgg-plugin-screenshot-lightbox h2 {
-	color:black;
+	color: black;
 }
-
 .elgg-plugin.elgg-state-active {
 	background: white;
 }
 .elgg-plugin.elgg-state-inactive {
 	background: #dedede;
 }
-
-.elgg-state-error {
+.elgg-plugin .elgg-state-error {
 	background: #fbe3e4;
 	color: #8a1f11;
 	border-color: #fbc2c4;
 	font-weight: bold;
 }
-.elgg-state-warning {
+.elgg-plugin .elgg-state-warning {
 	background: #fbedb5;
 	color: #000000;
 	border-color: #fbe58b;
 	font-weight: bold;
 }
+.elgg-plugin-more {
+	background-color: #eee;
 
-.admin_notices {
-	padding-bottom: 15px;
-}
-.admin_notices p {
-	background-color:#BDE5F8;
-	color: black;
-	border: 1px solid blue;
-	font-weight: bold;
-	padding: 3px 0px 3px 10px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
 
-	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
-	-moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45);
-
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-}
-
-.admin_notices a {
-	float: right;
-}
-
-.add-user form {
-	width:300px;
+	padding: 5px 10px;
+	margin: 4px 0;
 }
 
 /****************************************
-	Markdown Text
+	MARKDOWN
 ****************************************/
-
 .elgg-markdown {
 	margin: 15px;
 }
-
 .elgg-markdown h1,
 .elgg-markdown h2,
 .elgg-markdown h3,
@@ -1330,17 +1276,159 @@ ul.admin_plugins {
 	margin: 1em 0 1em -15px;
 	color: #333;
 }
-
 .elgg-markdown ol {
 	list-style: decimal;
 	padding-left: 2em;
 }
-
 .elgg-markdown ul {
 	list-style: disc;
 	padding-left: 2em;
 }
-
 .elgg-markdown p {
 	margin: 15px 0;
 }
+
+/* ***************************************
+	MISC
+*************************************** */
+.elgg-content-thin {
+	max-width: 600px;
+}
+
+.elgg-subtext {
+	color: #666;
+	font-size: 85%;
+	line-height: 1.2em;
+	font-style: italic;
+	margin-bottom: 5px;
+}
+
+.elgg-longtext-control {
+	margin-left: 14px;
+	font-size: 80%;
+	cursor: pointer;
+}
+
+table.mceLayout {
+	width:100% !important;
+}
+
+.elgg-output dt {
+	font-weight: bold;
+}
+.elgg-output dd {
+	margin: 0 0 1em 2em;
+}
+
+/* ***************************************
+	HELPERS
+*************************************** */
+.hidden {
+	display: none;
+}
+.centered {
+	margin: 0 auto;
+}
+.center {
+	text-align: center;
+}
+.float {
+	float: left;
+}
+.float-alt {
+	float: right;
+}
+.elgg-toggle {
+	cursor: pointer;
+}
+.elgg-discover .elgg-discoverable {
+	display: none;
+}
+.elgg-discover:hover .elgg-discoverable {
+	display: block;
+}
+.elgg-transition:hover {
+	opacity: .7;
+}
+
+/* ***************************************
+	BORDERS AND SEPARATORS
+*************************************** */
+.elgg-border-plain {
+	border: 1px solid #eeeeee;
+}
+.elgg-border-transition {
+	border: 1px solid #eeeeee;
+}
+.elgg-divide-top {
+	border-top: 1px solid #CCCCCC;
+}
+.elgg-divide-bottom {
+	border-bottom: 1px solid #CCCCCC;
+}
+.elgg-divide-left {
+	border-left: 1px solid #CCCCCC;
+}
+.elgg-divide-right {
+	border-right: 1px solid #CCCCCC;
+}
+
+/* ***************************************
+	SPACING (from OOCSS)
+*************************************** */
+.pan{padding:0}
+.pas{padding:5px}
+.pam{padding:10px}
+.pal{padding:20px}
+.ptn{padding-top:0}
+.pts{padding-top:5px}
+.ptm{padding-top:10px}
+.ptl{padding-top:20px}
+.prn{padding-right:0}
+.prs{padding-right:5px}
+.prm{padding-right:10px}
+.prl{padding-right:20px}
+.pbn{padding-bottom:0}
+.pbs{padding-bottom:5px}
+.pbm{padding-bottom:10px}
+.pbl{padding-bottom:20px}
+.pln{padding-left:0}
+.pls{padding-left:5px}
+.plm{padding-left:10px}
+.pll{padding-left:20px}
+.phn{padding-left:0;padding-right:0}
+.phs{padding-left:5px;padding-right:5px}
+.phm{padding-left:10px;padding-right:10px}
+.phl{padding-left:20px;padding-right:20px}
+.pvn{padding-top:0;padding-bottom:0}
+.pvs{padding-top:5px;padding-bottom:5px}
+.pvm{padding-top:10px;padding-bottom:10px}
+.pvl{padding-top:20px;padding-bottom:20px}
+.man{margin:0}
+.mas{margin:5px}
+.mam{margin:10px}
+.mal{margin:20px}
+.mtn{margin-top:0}
+.mts{margin-top:5px}
+.mtm{margin-top:10px}
+.mtl{margin-top:20px}
+.mrn{margin-right:0}
+.mrs{margin-right:5px}
+.mrm{margin-right:10px}
+.mrl{margin-right:20px}
+.mbn{margin-bottom:0}
+.mbs{margin-bottom:5px}
+.mbm{margin-bottom:10px}
+.mbl{margin-bottom:20px}
+.mln{margin-left:0}
+.mls{margin-left:5px}
+.mlm{margin-left:10px}
+.mll{margin-left:20px}
+.mhn{margin-left:0;margin-right:0}
+.mhs{margin-left:5px;margin-right:5px}
+.mhm{margin-left:10px;margin-right:10px}
+.mhl{margin-left:20px;margin-right:20px}
+.mvn{margin-top:0;margin-bottom:0}
+.mvs{margin-top:5px;margin-bottom:5px}
+.mvm{margin-top:10px;margin-bottom:10px}
+.mvl{margin-top:20px;margin-bottom:20px}

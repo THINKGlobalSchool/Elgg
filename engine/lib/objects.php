@@ -13,6 +13,7 @@
  * @param int $guid The guid to retreive
  *
  * @return bool
+ * @access private
  */
 function get_object_entity_as_row($guid) {
 	global $CONFIG;
@@ -51,11 +52,8 @@ function create_object_entity($guid, $title, $description) {
 			if ($result != false) {
 				// Update succeeded, continue
 				$entity = get_entity($guid);
-				if (elgg_trigger_event('update', $entity->type, $entity)) {
-					return $guid;
-				} else {
-					$entity->delete();
-				}
+				elgg_trigger_event('update', $entity->type, $entity);
+				return $guid;
 			}
 		} else {
 			// Update failed, attempt an insert.
@@ -109,6 +107,7 @@ function get_object_sites($object_guid, $limit = 10, $offset = 0) {
  * @param mixed  $params Params
  *
  * @return array
+ * @access private
  */
 function objects_test($hook, $type, $value, $params) {
 	global $CONFIG;

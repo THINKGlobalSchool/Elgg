@@ -192,6 +192,7 @@ function groups_setup_sidebar_menus() {
  *  Group members:        groups/members/<guid>
  *
  * @param array $page Array of url segments for routing
+ * @return bool
  */
 function groups_page_handler($page) {
 
@@ -238,13 +239,17 @@ function groups_page_handler($page) {
 		case 'requests':
 			groups_handle_requests_page($page[1]);
 			break;
+		default:
+			return false;
 	}
+	return true;
 }
 
 /**
  * Handle group icons.
  *
- * @param unknown_type $page
+ * @param array $page
+ * @return void
  */
 function groups_icon_handler($page) {
 
@@ -258,6 +263,7 @@ function groups_icon_handler($page) {
 	// Include the standard profile index
 	$plugin_dir = elgg_get_plugins_path();
 	include("$plugin_dir/groups/icon.php");
+	return true;
 }
 
 /**
@@ -435,7 +441,7 @@ function groups_annotation_menu_setup($hook, $type, $return, $params) {
 			'href' => $url,
 			'text' => "<span class=\"elgg-icon elgg-icon-delete\"></span>",
 			'confirm' => elgg_echo('deleteconfirm'),
-			'text_encode' => false
+			'encode_text' => false
 		);
 		$return[] = ElggMenuItem::factory($options);
 
@@ -447,7 +453,7 @@ function groups_annotation_menu_setup($hook, $type, $return, $params) {
 			'name' => 'edit',
 			'href' => "#edit-annotation-$annotation->id",
 			'text' => elgg_echo('edit'),
-			'text_encode' => false,
+			'encode_text' => false,
 			'rel' => 'toggle',
 		);
 		$return[] = ElggMenuItem::factory($options);
@@ -562,8 +568,10 @@ function groups_user_join_event_listener($event, $object_type, $object) {
  * Make sure users are added to the access collection
  */
 function groups_access_collection_override($hook, $entity_type, $returnvalue, $params) {
-	if (elgg_instanceof(get_entity($params['collection']->owner_guid), 'group')) {
-		return true;
+	if (isset($params['collection'])) {
+		if (elgg_instanceof(get_entity($params['collection']->owner_guid), 'group')) {
+			return true;
+		}
 	}
 }
 
@@ -655,7 +663,7 @@ function group_access_options($group) {
 		ACCESS_PRIVATE => 'private',
 		ACCESS_LOGGED_IN => 'logged in users',
 		ACCESS_PUBLIC => 'public',
-		$group->group_acl => 'Group: ' . $group->name,
+		$group->group_acl => elgg_echo('groups:acl', array($group->name)),
 	);
 	return $access_array;
 }
@@ -748,6 +756,7 @@ function discussion_init() {
  *  Edit discussion topic: discussion/edit/<guid>
  *
  * @param array $page Array of url segments for routing
+ * @return bool
  */
 function discussion_page_handler($page) {
 
@@ -771,7 +780,10 @@ function discussion_page_handler($page) {
 		case 'view':
 			discussion_handle_view_page($page[1]);
 			break;
+		default:
+			return false;
 	}
+	return true;
 }
 
 /**
@@ -818,7 +830,7 @@ function discussion_add_to_river_menu($hook, $type, $return, $params) {
 		if (elgg_instanceof($object, 'object', 'groupforumtopic')) {
 			if ($item->annotation_id == 0) {
 				$group = $object->getContainerEntity();
-				if ($group->canWriteToContainer() || elgg_is_admin_logged_in()) {
+				if ($group && ($group->canWriteToContainer() || elgg_is_admin_logged_in())) {
 					$options = array(
 						'name' => 'reply',
 						'href' => "#groups-reply-$object->guid",

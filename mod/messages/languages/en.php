@@ -11,6 +11,7 @@ $english = array(
 	*/
 
 	'messages' => "Messages",
+	'messages:unreadcount' => "%s unread",
 	'messages:back' => "back to messages",
 	'messages:user' => "%s's inbox",
 	'messages:posttitle' => "%s's messages: %s",
@@ -39,7 +40,7 @@ $english = array(
 
 	'messages:new' => 'New message',
 
-	'notification:method:site' => 'Messages',
+	'notification:method:site' => 'Site',
 
 	'messages:error' => 'There was a problem saving your message. Please try again.',
 

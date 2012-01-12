@@ -63,6 +63,8 @@ class ElggCoreHelpersTest extends ElggCoreUnitTest {
 		$this->assertFalse(elgg_instanceof($bad_entity));
 		$this->assertFalse(elgg_instanceof($bad_entity, 'object'));
 		$this->assertFalse(elgg_instanceof($bad_entity, 'object', 'test_subtype'));
+
+		remove_subtype('object', 'test_subtype');
 	}
 
 	/**
@@ -72,7 +74,13 @@ class ElggCoreHelpersTest extends ElggCoreUnitTest {
 		$conversions = array(
 			'http://example.com' => 'http://example.com',
 			'https://example.com' => 'https://example.com',
+			'http://example-time.com' => 'http://example-time.com',
+
 			'//example.com' => '//example.com',
+			'ftp://example.com/file' => 'ftp://example.com/file',
+			'mailto:brett@elgg.org' => 'mailto:brett@elgg.org',
+			'javascript:alert("test")' => 'javascript:alert("test")',
+			'app://endpoint' => 'app://endpoint',
 
 			'example.com' => 'http://example.com',
 			'example.com/subpage' => 'http://example.com/subpage',
@@ -119,7 +127,7 @@ class ElggCoreHelpersTest extends ElggCoreUnitTest {
 		$this->assertIdentical('http://test1.com', $item->url);
 
 		// send a bad url
-		$result = @elgg_register_js('bad');
+		$result = elgg_register_js('bad', null);
 		$this->assertFalse($result);
 	}
 
@@ -166,7 +174,9 @@ class ElggCoreHelpersTest extends ElggCoreUnitTest {
 		$this->assertFalse(isset($CONFIG->externals_map['js']['id1']));
 		
 		foreach ($elements as $element) {
-			$this->assertFalse($element->name == 'id1');
+			if (isset($element->name)) {
+				$this->assertFalse($element->name == 'id1');
+			}
 		}
 
 		$result = elgg_unregister_js('id1');
@@ -180,7 +190,9 @@ class ElggCoreHelpersTest extends ElggCoreUnitTest {
 
 		$this->assertFalse(isset($CONFIG->externals_map['js']['id2']));
 		foreach ($elements as $element) {
-			$this->assertFalse($element->name == 'id2');
+			if (isset($element->name)) {
+				$this->assertFalse($element->name == 'id2');
+			}
 		}
 
 		$this->assertTrue(isset($CONFIG->externals_map['js']['id3']));
@@ -204,7 +216,7 @@ class ElggCoreHelpersTest extends ElggCoreUnitTest {
 		$this->assertTrue($result);
 		
 		$js_urls = elgg_get_loaded_js('footer');
-		$this->assertIdentical(array('http://test1.com'), $js_urls);
+		$this->assertIdentical(array(500 => 'http://test1.com'), $js_urls);
 	}
 
 	/**
@@ -227,9 +239,10 @@ class ElggCoreHelpersTest extends ElggCoreUnitTest {
 		}
 
 		$js_urls = elgg_get_loaded_js('head');
-		$this->assertIdentical($js_urls[0], $urls['id1']);
-		$this->assertIdentical($js_urls[1], $urls['id2']);
-		$this->assertIdentical($js_urls[2], $urls['id3']);
+
+		$this->assertIdentical($js_urls[500], $urls['id1']);
+		$this->assertIdentical($js_urls[501], $urls['id2']);
+		$this->assertIdentical($js_urls[502], $urls['id3']);
 
 		$js_urls = elgg_get_loaded_js('footer');
 		$this->assertIdentical(array(), $js_urls);
@@ -338,7 +351,7 @@ class ElggCoreHelpersTest extends ElggCoreUnitTest {
 		$test_elements = $pl->getElements();
 
 		// make sure it's gone.
-		$this->assertTrue(2, count($test_elements));
+		$this->assertEqual(2, count($test_elements));
 		$this->assertIdentical($elements[0], $test_elements[0]);
 		$this->assertIdentical($elements[2], $test_elements[2]);
 	}
@@ -356,7 +369,7 @@ class ElggCoreHelpersTest extends ElggCoreUnitTest {
 			$pl->add($element, $priority);
 		}
 
-		$this->assertTrue($pl->move($elements[-5], 10));
+		$this->assertEqual($pl->move($elements[-5], 10), 10);
 		
 		// check it's at the new place
 		$this->assertIdentical($elements[-5], $pl->getElement(10));

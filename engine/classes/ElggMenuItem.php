@@ -2,12 +2,11 @@
 /**
  * Elgg Menu Item
  *
- * @package    Elgg.Core
- * @subpackage Navigation
- *
  * To create a menu item that is not a link, pass false for $href.
  *
- * @since 1.8.0
+ * @package    Elgg.Core
+ * @subpackage Navigation
+ * @since      1.8.0
  */
 class ElggMenuItem {
 
@@ -59,7 +58,7 @@ class ElggMenuItem {
 	/**
 	 * @var string Tooltip
 	 */
-	protected $title = '';
+	protected $title = false;
 
 	/**
 	 * @var string The string to display if link is clicked
@@ -70,9 +69,9 @@ class ElggMenuItem {
 	/**
 	 * ElggMenuItem constructor
 	 *
-	 * @param string $name  Identifier of the menu item
-	 * @param string $text  Display text of the menu item
-	 * @param string $href  URL of the menu item (false if not a link)
+	 * @param string $name Identifier of the menu item
+	 * @param string $text Display text of the menu item
+	 * @param string $href URL of the menu item (false if not a link)
 	 */
 	public function __construct($name, $text, $href) {
 		//$this->name = $name;
@@ -99,6 +98,9 @@ class ElggMenuItem {
 	public static function factory($options) {
 		if (!isset($options['name']) || !isset($options['text'])) {
 			return NULL;
+		}
+		if (!isset($options['href'])) {
+			$options['href'] = '';
 		}
 
 		$item = new ElggMenuItem($options['name'], $options['text'], $options['href']);
@@ -179,7 +181,7 @@ class ElggMenuItem {
 	/**
 	 * Set the identifier of the menu item
 	 *
-	 * @param string Unique identifier
+	 * @param string $name Unique identifier
 	 * @return void
 	 */
 	public function setName($name) {
@@ -412,6 +414,7 @@ class ElggMenuItem {
 	 *
 	 * @param int $priority The smaller numbers mean higher priority (1 before 100)
 	 * @return void
+	 * @deprecated
 	 */
 	public function setWeight($priority) {
 		$this->data['priority'] = $priority;
@@ -421,8 +424,28 @@ class ElggMenuItem {
 	 * Get the priority of the menu item
 	 *
 	 * @return int
+	 * @deprecated
 	 */
 	public function getWeight() {
+		return $this->data['priority'];
+	}
+
+	/**
+	 * Set the priority of the menu item
+	 *
+	 * @param int $priority The smaller numbers mean higher priority (1 before 100)
+	 * @return void
+	 */
+	public function setPriority($priority) {
+		$this->data['priority'] = $priority;
+	}
+
+	/**
+	 * Get the priority of the menu item
+	 *
+	 * @return int
+	 */
+	public function getPriority() {
 		return $this->data['priority'];
 	}
 
@@ -467,7 +490,7 @@ class ElggMenuItem {
 	/**
 	 * Set the parent menu item
 	 *
-	 * @param ElggMenuItem $parent
+	 * @param ElggMenuItem $parent The parent of this menu item
 	 * @return void
 	 */
 	public function setParent($parent) {
@@ -486,7 +509,7 @@ class ElggMenuItem {
 	/**
 	 * Add a child menu item
 	 *
-	 * @param ElggMenuItem $item
+	 * @param ElggMenuItem $item A child menu item
 	 * @return void
 	 */
 	public function addChild($item) {
@@ -525,9 +548,8 @@ class ElggMenuItem {
 	/**
 	 * Get the menu item content (usually a link)
 	 *
-	 * @params array $vars Options to pass to output/url if a link
+	 * @param array $vars Options to pass to output/url if a link
 	 * @return string
-	 *
 	 * @todo View code in a model.  How do we feel about that?
 	 */
 	public function getContent(array $vars = array()) {
@@ -543,15 +565,21 @@ class ElggMenuItem {
 
 		if ($this->data['linkClass']) {
 			if (isset($vars['class'])) {
-				$vars['class'] += $this->getLinkClass();
+				$vars['class'] = $vars['class'] . ' ' . $this->getLinkClass();
 			} else {
 				$vars['class'] = $this->getLinkClass();
 			}
 		}
 
+		if (!isset($vars['rel']) && !isset($vars['is_trusted'])) {
+			$vars['is_trusted'] = true;
+		}
+
 		if ($this->confirm) {
 			$vars['confirm'] = $this->confirm;
 			return elgg_view('output/confirmlink', $vars);
+		} else {
+			unset($vars['confirm']);
 		}
 
 		return elgg_view('output/url', $vars);

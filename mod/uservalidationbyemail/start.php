@@ -41,6 +41,7 @@ function uservalidationbyemail_init() {
 	// admin interface to manually validate users
 	elgg_register_admin_menu_item('administer', 'unvalidated', 'users');
 
+	elgg_extend_view('css/admin', 'uservalidationbyemail/css');
 	elgg_extend_view('js/elgg', 'uservalidationbyemail/js');
 
 	$action_path = dirname(__FILE__) . '/actions';
@@ -66,6 +67,17 @@ function uservalidationbyemail_disable_new_user($hook, $type, $value, $params) {
 	// no clue what's going on, so don't react.
 	if (!$user instanceof ElggUser) {
 		return;
+	}
+
+	// another plugin is requesting that registration be terminated
+	// no need for uservalidationbyemail
+	if (!$value) {
+		return $value;
+	}
+
+	// has the user already been validated?
+	if (elgg_get_user_validation_status($user->guid) == true) {
+		return $value;
 	}
 
 	// disable user to prevent showing up on the site
@@ -149,6 +161,7 @@ function uservalidationbyemail_check_auth_attempt($credentials) {
  * Checks sent passed validation code and user guids and validates the user.
  *
  * @param array $page
+ * @return bool
  */
 function uservalidationbyemail_page_handler($page) {
 
@@ -162,7 +175,7 @@ function uservalidationbyemail_page_handler($page) {
 
 		$user = get_entity($user_guid);
 
-		if (($code) && ($user)) {
+		if ($code && $user) {
 			if (uservalidationbyemail_validate_email($user_guid, $code)) {
 
 				elgg_push_context('uservalidationbyemail_validate_user');
@@ -184,7 +197,8 @@ function uservalidationbyemail_page_handler($page) {
 		register_error(elgg_echo('email:confirm:fail'));
 	}
 
-	forward();
+	// forward to front page
+	forward('');
 }
 
 /**

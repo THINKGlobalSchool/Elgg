@@ -18,7 +18,7 @@ class ElggCoreSiteTest extends ElggCoreUnitTest {
 	 * Called before each test method.
 	 */
 	public function setUp() {
-		$this->site = new ElggSiteTest;
+		$this->site = new ElggSiteTest();
 	}
 
 	/**
@@ -36,9 +36,6 @@ class ElggCoreSiteTest extends ElggCoreUnitTest {
 		parent::__destruct();
 	}
 
-	/**
-	 * A basic test that will be called and fail.
-	 */
 	public function testElggSiteConstructor() {
 		$attributes = array();
 		$attributes['guid'] = NULL;
@@ -66,8 +63,10 @@ class ElggCoreSiteTest extends ElggCoreUnitTest {
 	}
 
 	public function testElggSiteSaveAndDelete() {
-		$this->assertTrue($this->site->save());
-		$this->assertTrue($this->site->delete());
+		$guid = $this->site->save();
+		$this->assertIsA($guid, 'int');
+		$this->assertTrue($guid > 0);
+		$this->assertIdentical(true, $this->site->delete());
 	}
 }
 

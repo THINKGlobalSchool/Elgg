@@ -1,6 +1,7 @@
 elgg.provide('elgg.ui');
 
 elgg.ui.init = function () {
+	// add user hover menus
 	elgg.ui.initHoverMenu();
 
 	//if the user clicks a system message, make it disappear
@@ -13,23 +14,14 @@ elgg.ui.init = function () {
 
 	$('[rel=toggle]').live('click', elgg.ui.toggles);
 
-	$('[rel=popup]').live('click', elgg.ui.popsUp);
+	$('[rel=popup]').live('click', elgg.ui.popupOpen);
 
 	$('.elgg-menu-page .elgg-menu-parent').live('click', elgg.ui.toggleMenu);
 
 	$('.elgg-requires-confirmation').live('click', elgg.ui.requiresConfirmation);
 
-	if ($('.elgg-input-date').length) {
-		elgg.ui.initDatePicker();
-	}
-
-	// fix for ie7 CSS issue on menu dropdown
-	// open the menu when you hover over it, close when you click off of it.
-	// @todo This should be possible with CSS. Anyone want to tame the beast, go for it.
-	if ($.browser.msie && $.browser.version <= 7) {
-		$('.elgg-menu-site > .elgg-more').live('mouseenter', elgg.ui.ie7MenuFixMouseEnter)
-	}
-}
+	$('.elgg-autofocus').focus();
+};
 
 /**
  * Toggles an element based on clicking a separate element
@@ -47,7 +39,7 @@ elgg.ui.toggles = function(event) {
 	var target = $(this).toggleClass('elgg-state-active').attr('href');
 
 	$(target).slideToggle('medium');
-}
+};
 
 /**
  * Pops up an element based on clicking a separate element
@@ -67,7 +59,7 @@ elgg.ui.toggles = function(event) {
  * @param {Object} event
  * @return void
  */
-elgg.ui.popsUp = function(event) {
+elgg.ui.popupOpen = function(event) {
 	event.preventDefault();
 	event.stopPropagation();
 
@@ -109,7 +101,7 @@ elgg.ui.popsUp = function(event) {
 	$('body')
 		.die('click', elgg.ui.popupClose)
 		.live('click', elgg.ui.popupClose);
-}
+};
 
 /**
  * Catches clicks that aren't in a popup and closes all popups.
@@ -147,7 +139,7 @@ elgg.ui.popupClose = function(event) {
 
 		$('body').die('click', elgg.ui.popClose);
 	}
-}
+};
 
 /**
  * Toggles a child menu when the parent is clicked
@@ -159,7 +151,7 @@ elgg.ui.toggleMenu = function(event) {
 	$(this).siblings().slideToggle('medium');
 	$(this).toggleClass('elgg-menu-closed elgg-menu-opened');
 	event.preventDefault();
-}
+};
 
 /**
  * Initialize the hover menu
@@ -187,7 +179,7 @@ elgg.ui.initHoverMenu = function(parent) {
 		var $hovermenu = $(this).data('hovermenu') || null;
 
 		if (!$hovermenu) {
-			var $hovermenu = $(this).parent().find(".elgg-menu-hover");
+			$hovermenu = $(this).parent().find(".elgg-menu-hover");
 			$(this).data('hovermenu', $hovermenu);
 		}
 
@@ -219,7 +211,7 @@ elgg.ui.initHoverMenu = function(parent) {
 			$(".elgg-menu-hover").fadeOut();
 		}
 	});
-}
+};
 
 /**
  * Calls a confirm() and prevents default if denied.
@@ -244,7 +236,7 @@ elgg.ui.requiresConfirmation = function(e) {
  *
  * @return {Object}
  */
-elgg.ui.LoginHandler = function(hook, type, params, options) {
+elgg.ui.loginHandler = function(hook, type, params, options) {
 	if (params.target.attr('id') == 'login-dropdown-box') {
 		options.my = 'right top';
 		options.at = 'right bottom';
@@ -265,49 +257,25 @@ elgg.ui.LoginHandler = function(hook, type, params, options) {
  * @return void
  */
 elgg.ui.initDatePicker = function() {
-	$('.elgg-input-date').datepicker({
-		// ISO-8601
-		dateFormat: 'yy-mm-dd',
-		onSelect: function(dateText) {
-			if ($(this).is('.elgg-input-timestamp')) {
-				// convert to unix timestamp
-				var date = $.datepicker.parseDate('yy-mm-dd', dateText);
-				var timestamp = $.datepicker.formatDate('@', date);
-				timestamp = timestamp / 1000;
+	if ($('.elgg-input-date').length) {
+		$('.elgg-input-date').datepicker({
+			// ISO-8601
+			dateFormat: 'yy-mm-dd',
+			onSelect: function(dateText) {
+				if ($(this).is('.elgg-input-timestamp')) {
+					// convert to unix timestamp
+					var dateParts = dateText.split("-");
+					var timestamp = Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]);
+					timestamp = timestamp / 1000;
 
-				var id = $(this).attr('id');
-				$('input[name="' + id + '"]').val(timestamp);
+					var id = $(this).attr('id');
+					$('input[name="' + id + '"]').val(timestamp);
+				}
 			}
-		}
-	});
-}
-
-/**
- * IE 7 doesn't like our site menu system CSS, so open it with JS.
- */
-elgg.ui.ie7MenuFixMouseEnter = function() {
-	$('.elgg-menu-site .elgg-menu-site-more').css('display', 'block');
-	$('.elgg-menu-site .elgg-more > a')
-		.css('background-color', 'white')
-		.css('color', '#555')
-
-	$body = $('body');
-	if (!$body.data('hasIe7Clear')) {
-		$body.live('click', elgg.ui.ie7MenuClear);
-		$body.data('hasIe7Clear', true);
+		});
 	}
-	
-}
-
-/**
- * Close the menu when clicking on the body
- */
-elgg.ui.ie7MenuClear = function() {
-	$('.elgg-menu-site .elgg-menu-site-more').css('display', 'none');
-	$('.elgg-menu-site .elgg-more > a')
-		.css('background-color', 'transparent')
-		.css('color', 'white')
-}
+};
 
 elgg.register_hook_handler('init', 'system', elgg.ui.init);
-elgg.register_hook_handler('getOptions', 'ui.popup', elgg.ui.LoginHandler);
+elgg.register_hook_handler('init', 'system', elgg.ui.initDatePicker);
+elgg.register_hook_handler('getOptions', 'ui.popup', elgg.ui.loginHandler);

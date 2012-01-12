@@ -58,11 +58,11 @@ class ElggCoreMetadataAPITest extends ElggCoreUnitTest {
 		$this->create_metastring('tested');
 
 		// create_metadata returns id of metadata on success
-		$this->assertTrue(create_metadata($this->object->guid, 'metaUnitTest', 'tested'));
+		$this->assertNotEqual(false, create_metadata($this->object->guid, 'metaUnitTest', 'tested'));
 
 		// check value with improper case
 		$options = array('metadata_names' => 'metaUnitTest', 'metadata_values' => 'Tested', 'limit' => 10, 'metadata_case_sensitive' => TRUE);
-		$this->assertFalse(elgg_get_entities_from_metadata($options));
+		$this->assertIdentical(array(), elgg_get_entities_from_metadata($options));
 
 		// compare forced case with ignored case
 		$options = array('metadata_names' => 'metaUnitTest', 'metadata_values' => 'tested', 'limit' => 10, 'metadata_case_sensitive' => TRUE);
@@ -75,16 +75,9 @@ class ElggCoreMetadataAPITest extends ElggCoreUnitTest {
 
 		$this->assertIdentical($case_true, $case_false);
 
-		// check deprecated get_entities_from_metadata() function
-		$deprecated = get_entities_from_metadata('metaUnitTest', 'tested', '', '', 0, 10, 0, '', 0, FALSE, TRUE);
-		$this->assertIdentical($deprecated, $case_true);
-
-		// check entity list
-		//$this->dump(list_entities_from_metadata('metaUnitTest', 'Tested', '', '', 0, 10, TRUE, TRUE, TRUE, FALSE));
-
 		// clean up
-		$this->delete_metastrings();
 		$this->object->delete();
+		$this->delete_metastrings();
 	}
 
 	public function testElggGetMetadataCount() {
@@ -104,6 +97,31 @@ class ElggCoreMetadataAPITest extends ElggCoreUnitTest {
 		$this->assertIdentical($count, 2);
 
 		$this->object->delete();
+	}
+
+	public function testElggDeleteMetadata() {
+		$e = new ElggObject();
+		$e->save();
+
+		for ($i=0; $i<30; $i++) {
+			$name = "test_metadata" . rand(0, 10000);
+			$e->$name = rand(0, 10000);
+		}
+
+		$options = array(
+			'guid' => $e->getGUID(),
+			'limit' => 0
+		);
+
+		$md = elgg_get_metadata($options);
+		$this->assertIdentical(30, count($md));
+
+		$this->assertTrue(elgg_delete_metadata($options));
+
+		$md = elgg_get_metadata($options);
+		$this->assertTrue(empty($md));
+
+		$e->delete();
 	}
 
 

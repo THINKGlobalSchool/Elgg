@@ -89,14 +89,10 @@ if ($new_group_flag) {
 
 $group->save();
 
-// group creator needs to be member of new group and river entry created
-if ($new_group_flag) {
-	set_page_owner($group->guid);
-	$group->join($user);
-	add_to_river('river/group/create', 'create', $user->guid, $group->guid);
-}
-
 // Invisible group support
+// @todo this requires save to be called to create the acl for the group. This
+// is an odd requirement and should be removed. Either the acl creation happens
+// in the action or the visibility moves to a plugin hook
 if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {
 	$visibility = (int)get_input('vis', '', false);
 	if ($visibility != ACCESS_PUBLIC && $visibility != ACCESS_LOGGED_IN) {
@@ -105,13 +101,24 @@ if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {
 
 	if ($group->access_id != $visibility) {
 		$group->access_id = $visibility;
-		$group->save();
 	}
+}
+
+$group->save();
+
+// group creator needs to be member of new group and river entry created
+if ($new_group_flag) {
+	elgg_set_page_owner_guid($group->guid);
+	$group->join($user);
+	add_to_river('river/group/create', 'create', $user->guid, $group->guid, $group->access_id);
 }
 
 // Now see if we have a file icon
 if ((isset($_FILES['icon'])) && (substr_count($_FILES['icon']['type'],'image/'))) {
-	$prefix = "groups/".$group->guid;
+
+	$icon_sizes = elgg_get_config('icon_sizes');
+
+	$prefix = "groups/" . $group->guid;
 
 	$filehandler = new ElggFile();
 	$filehandler->owner_guid = $group->owner_guid;
@@ -120,10 +127,10 @@ if ((isset($_FILES['icon'])) && (substr_count($_FILES['icon']['type'],'image/'))
 	$filehandler->write(get_uploaded_file('icon'));
 	$filehandler->close();
 
-	$thumbtiny = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(),25,25, true);
-	$thumbsmall = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(),40,40, true);
-	$thumbmedium = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(),100,100, true);
-	$thumblarge = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(),200,200, false);
+	$thumbtiny = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(), $icon_sizes['tiny']['w'], $icon_sizes['tiny']['h'], $icon_sizes['tiny']['square']);
+	$thumbsmall = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(), $icon_sizes['small']['w'], $icon_sizes['small']['h'], $icon_sizes['small']['square']);
+	$thumbmedium = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(), $icon_sizes['medium']['w'], $icon_sizes['medium']['h'], $icon_sizes['medium']['square']);
+	$thumblarge = get_resized_image_from_existing_file($filehandler->getFilenameOnFilestore(), $icon_sizes['large']['w'], $icon_sizes['large']['h'], $icon_sizes['large']['square']);
 	if ($thumbtiny) {
 
 		$thumb = new ElggFile();

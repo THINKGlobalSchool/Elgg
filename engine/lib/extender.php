@@ -44,6 +44,7 @@ function detect_extender_valuetype($value, $value_type = "") {
  * @param ODDMetaData $element The OpenDD element
  *
  * @return bool
+ * @access private
  */
 function oddmetadata_to_elggextender(ElggEntity $entity, ODDMetaData $element) {
 	// Get the type of extender (metadata, type, attribute etc)
@@ -163,9 +164,9 @@ function can_edit_extender($extender_id, $type, $user_guid = 0) {
  * It is recommended that you do not call this directly, instead use
  * one of the wrapper functions such as elgg_register_annotation_url_handler().
  *
- * @param string $function_name The function to register
  * @param string $extender_type Extender type ('annotation', 'metadata')
  * @param string $extender_name The name of the extender
+ * @param string $function_name The function to register
  *
  * @return bool
  */

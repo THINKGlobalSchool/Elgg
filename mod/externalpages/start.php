@@ -12,6 +12,9 @@ function expages_init() {
 	elgg_register_page_handler('terms', 'expages_page_handler');
 	elgg_register_page_handler('privacy', 'expages_page_handler');
 	elgg_register_page_handler('expages', 'expages_page_handler');
+	
+	// Register public external pages
+	elgg_register_plugin_hook_handler('public_pages', 'walled_garden', 'expages_public');
 
 	// add a menu item for the admin edit page
 	elgg_register_admin_menu_item('configure', 'expages', 'appearance');
@@ -25,14 +28,26 @@ function expages_init() {
 }
 
 /**
+ * Extend the public pages range
+ *
+ */
+function expages_public($hook, $handler, $return, $params){
+	$pages = array('about', 'terms', 'privacy');
+	return array_merge($pages, $return);
+}
+
+/**
  * Setup the links to site pages
  */
 function expages_setup_footer_menu() {
 	$pages = array('about', 'terms', 'privacy');
 	foreach ($pages as $page) {
 		$url = "$page";
-		$item = new ElggMenuItem($page, elgg_echo("expages:$page"), $url);
-		elgg_register_menu_item('footer', $item);
+		$wg_item = new ElggMenuItem($page, elgg_echo("expages:$page"), $url);
+		elgg_register_menu_item('walled_garden', $wg_item);
+
+		$footer_item = clone $wg_item;
+		elgg_register_menu_item('footer', $footer_item);
 	}
 }
 
@@ -41,6 +56,7 @@ function expages_setup_footer_menu() {
  *
  * @param array  $page    URL segements
  * @param string $handler Handler identifier
+ * @return bool
  */
 function expages_page_handler($page, $handler) {
 	if ($handler == 'expages') {
@@ -64,6 +80,7 @@ function expages_page_handler($page, $handler) {
 
 	$body = elgg_view_layout("one_sidebar", array('content' => $content));
 	echo elgg_view_page($title, $body);
+	return true;
 }
 
 /**

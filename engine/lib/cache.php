@@ -34,8 +34,9 @@ function elgg_get_filepath_cache() {
 }
 
 /**
- * Function which resets the file path cache.
+ * Reset the file path cache.
  *
+ * @return bool
  */
 function elgg_filepath_cache_reset() {
 	$cache = elgg_get_filepath_cache();
@@ -47,8 +48,8 @@ function elgg_filepath_cache_reset() {
 /**
  * Saves a filepath cache.
  *
- * @param string $type
- * @param string $data
+ * @param string $type The type or identifier of the cache
+ * @param string $data The data to be saved
  * @return bool
  */
 function elgg_filepath_cache_save($type, $data) {
@@ -89,7 +90,7 @@ function elgg_filepath_cache_load($type) {
  * Uses the 'viewpath_cache_enabled' datalist with a boolean value.
  * Resets the views paths cache.
  *
- * @return null
+ * @return void
  */
 function elgg_enable_filepath_cache() {
 	global $CONFIG;
@@ -105,7 +106,7 @@ function elgg_enable_filepath_cache() {
  * Uses the 'viewpath_cache_enabled' datalist with a boolean value.
  * Resets the views paths cache.
  *
- * @return null
+ * @return void
  */
 function elgg_disable_filepath_cache() {
 	global $CONFIG;
@@ -351,4 +352,3 @@ function elgg_invalidate_simplecache() {
 
 	return $return;
 }
-

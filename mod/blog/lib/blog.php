@@ -20,7 +20,6 @@ function blog_get_page_content_read($guid = NULL) {
 
 	// no header or tabs for viewing an individual blog
 	$return['filter'] = '';
-	$return['header'] = '';
 
 	if (!elgg_instanceof($blog, 'object', 'blog')) {
 		$return['content'] = elgg_echo('blog:error:post_not_found');
@@ -67,6 +66,9 @@ function blog_get_page_content_list($container_guid = NULL) {
 
 	$loggedin_userid = elgg_get_logged_in_user_guid();
 	if ($container_guid) {
+		// access check for closed groups
+		group_gatekeeper();
+
 		$options['container_guid'] = $container_guid;
 		$container = get_entity($container_guid);
 		if (!$container) {
@@ -121,6 +123,9 @@ function blog_get_page_content_list($container_guid = NULL) {
 function blog_get_page_content_friends($user_guid) {
 
 	$user = get_user($user_guid);
+	if (!$user) {
+		forward('blog/all');
+	}
 
 	$return = array();
 
@@ -182,11 +187,16 @@ function blog_get_page_content_archive($owner_guid, $lower = 0, $upper = 0) {
 
 	$now = time();
 
-	$user = get_user($owner_guid);
+	$owner = get_entity($owner_guid);
 	elgg_set_page_owner_guid($owner_guid);
 
-	$crumbs_title = $user->name;
-	elgg_push_breadcrumb($crumbs_title, "blog/owner/{$user->username}");
+	$crumbs_title = $owner->name;
+	if (elgg_instanceof($owner, 'user')) {
+		$url = "blog/owner/{$owner->username}";
+	} else {
+		$url = "blog/group/$owner->guid/all";
+	}
+	elgg_push_breadcrumb($crumbs_title, $url);
 	elgg_push_breadcrumb(elgg_echo('blog:archives'));
 
 	if ($lower) {
@@ -204,7 +214,7 @@ function blog_get_page_content_archive($owner_guid, $lower = 0, $upper = 0) {
 	);
 
 	if ($owner_guid) {
-		$options['owner_guid'] = $owner_guid;
+		$options['container_guid'] = $owner_guid;
 	}
 
 	// admin / owners can see any posts

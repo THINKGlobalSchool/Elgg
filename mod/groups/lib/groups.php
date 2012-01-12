@@ -24,6 +24,9 @@ function groups_handle_all_page() {
 				'inverse_relationship' => false,
 				'full_view' => false,
 			));
+			if (!$content) {
+				$content = elgg_echo('groups:none');
+			}
 			break;
 		case 'discussion':
 			$content = elgg_list_entities(array(
@@ -33,6 +36,9 @@ function groups_handle_all_page() {
 				'limit' => 40,
 				'full_view' => false,
 			));
+			if (!$content) {
+				$content = elgg_echo('discussion:none');
+			}
 			break;
 		case 'newest':
 		default:
@@ -40,6 +46,9 @@ function groups_handle_all_page() {
 				'type' => 'group',
 				'full_view' => false,
 			));
+			if (!$content) {
+				$content = elgg_echo('groups:none');
+			}
 			break;
 	}
 
@@ -107,6 +116,9 @@ function groups_handle_owned_page() {
 		'owner_guid' => elgg_get_page_owner_guid(),
 		'full_view' => false,
 	));
+	if (!$content) {
+		$content = elgg_echo('groups:none');
+	}
 
 	$params = array(
 		'content' => $content,
@@ -137,6 +149,9 @@ function groups_handle_mine_page() {
 		'inverse_relationship' => false,
 		'full_view' => false,
 	));
+	if (!$content) {
+		$content = elgg_echo('groups:none');
+	}
 
 	$params = array(
 		'content' => $content,
@@ -219,6 +234,8 @@ function groups_handle_invitations_page() {
 function groups_handle_profile_page($guid) {
 	elgg_set_page_owner_guid($guid);
 
+	elgg_push_context('group_profile');
+
 	// turn this into a core function
 	global $autofeed;
 	$autofeed = true;
@@ -232,7 +249,11 @@ function groups_handle_profile_page($guid) {
 
 	$content = elgg_view('groups/profile/layout', array('entity' => $group));
 	if (group_gatekeeper(false)) {
-		$sidebar = elgg_view('groups/sidebar/members', array('entity' => $group));
+		$sidebar = '';
+		if (elgg_is_active_plugin('search')) {
+			$sidebar .= elgg_view('groups/sidebar/search', array('entity' => $group));
+		}
+		$sidebar .= elgg_view('groups/sidebar/members', array('entity' => $group));
 	} else {
 		$sidebar = '';
 	}
@@ -388,9 +409,11 @@ function groups_handle_requests_page($guid) {
 		elgg_push_breadcrumb($title);
 		
 		$requests = elgg_get_entities_from_relationship(array(
+			'type' => 'user',
 			'relationship' => 'membership_request',
 			'relationship_guid' => $guid,
 			'inverse_relationship' => true,
+			'limit' => 0,
 		));
 		$content = elgg_view('groups/membershiprequests', array(
 			'requests' => $requests,
@@ -430,12 +453,14 @@ function groups_register_profile_buttons($group) {
 	}
 
 	// group members
-	if ($group->isMember($user)) {
-		// leave
-		$url = elgg_get_site_url() . "action/groups/leave?group_guid={$group->getGUID()}";
-		$url = elgg_add_action_tokens_to_url($url);
-		$actions[$url] = 'groups:leave';
-	} else {
+	if ($group->isMember(elgg_get_logged_in_user_entity())) {
+		if ($group->getOwnerGUID() != elgg_get_logged_in_user_guid()) {
+			// leave
+			$url = elgg_get_site_url() . "action/groups/leave?group_guid={$group->getGUID()}";
+			$url = elgg_add_action_tokens_to_url($url);
+			$actions[$url] = 'groups:leave';
+		}
+	} elseif (elgg_is_logged_in()) {
 		// join - admins can always join.
 		$url = elgg_get_site_url() . "action/groups/join?group_guid={$group->getGUID()}";
 		$url = elgg_add_action_tokens_to_url($url);

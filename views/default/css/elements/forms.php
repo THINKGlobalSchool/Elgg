@@ -41,7 +41,7 @@ input, textarea {
 	box-sizing: border-box;
 }
 
-input:focus, textarea:focus {
+input[type=text]:focus, textarea:focus {
 	border: solid 1px #4690d6;
 	background: #e4ecf5;
 	color:#333;
@@ -72,14 +72,13 @@ input[type="radio"] {
 	width:auto;
 }
 .elgg-input-checkboxes.elgg-horizontal li,
-.elgg-input-radio.elgg-horizontal li {
+.elgg-input-radios.elgg-horizontal li {
 	display: inline;
 	padding-right: 10px;
 }
 
-.elgg-form-account input[type="text"],
-.elgg-form-account input[type="password"] {
-	width: 300px;
+.elgg-form-login, .elgg-form-account {
+	max-width: 450px;
 }
 
 /* ***************************************
@@ -235,36 +234,78 @@ input[type="radio"] {
 }
 
 /* ***************************************
+	AUTOCOMPLETE
+*************************************** */
+<?php //autocomplete will expand to fullscreen without max-width ?>
+.ui-autocomplete {
+	position: absolute;
+	cursor: default;
+}
+.elgg-autocomplete-item .elgg-body {
+	max-width: 600px;
+}
+.ui-autocomplete {
+	background-color: white;
+	border: 1px solid #ccc;
+	overflow: hidden;
+
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.ui-autocomplete .ui-menu-item {
+	padding: 0px 4px;
+	
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.ui-autocomplete .ui-menu-item:hover {
+	background-color: #eee;
+}
+.ui-autocomplete a:hover {
+	text-decoration: none;
+	color: #4690D6;
+}
+
+/* ***************************************
 	USER PICKER
 *************************************** */
+.elgg-user-picker-list li:first-child {
+	border-top: 1px dotted #ccc;
+	margin-top: 5px;
+}
+.elgg-user-picker-list > li {
+	border-bottom: 1px dotted #ccc;
+}
 
-.user-picker .user-picker-entry {
-	clear:both;
-	height:25px;
-	padding:5px;
-	margin-top:5px;
-	border-bottom:1px solid #cccccc;
-}
-.user-picker-entry .elgg-button-delete {
-	margin-right:10px;
-}
 /* ***************************************
       DATE PICKER
 **************************************** */
 .ui-datepicker {
+	display: none;
+
 	margin-top: 3px;
+	width: 208px;
 	background-color: white;
 	border: 1px solid #0054A7;
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
+	overflow: hidden;
+
 	-webkit-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
 	-moz-box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
 	box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
-	overflow: hidden;
+}
+.ui-datepicker-inline {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
 }
 
 .ui-datepicker-header {
+	position: relative;
 	background: #4690D6;
 	color: white;
 	padding: 2px 0;

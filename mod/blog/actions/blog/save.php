@@ -78,11 +78,8 @@ foreach ($values as $name => $default) {
 
 		case 'excerpt':
 			if ($value) {
-				$value = elgg_get_excerpt($value);
-			} else {
-				$value = elgg_get_excerpt($values['description']);
+				$values[$name] = elgg_get_excerpt($value);
 			}
-			$values[$name] = $value;
 			break;
 
 		case 'container_guid':
@@ -131,10 +128,10 @@ if (!$error) {
 		elgg_clear_sticky_form('blog');
 
 		// remove autosave draft if exists
-		$blog->clearAnnotations('blog_auto_save');
+		$blog->deleteAnnotations('blog_auto_save');
 
 		// no longer a brand new post.
-		$blog->clearMetadata('new_post');
+		$blog->deleteMetadata('new_post');
 
 		// if this was an edit, create a revision annotation
 		if (!$new_post && $revision_text) {
@@ -144,7 +141,6 @@ if (!$error) {
 		system_message(elgg_echo('blog:message:saved'));
 
 		$status = $blog->status;
-		$db_prefix = elgg_get_config('dbprefix');
 
 		// add to river if changing status or published, regardless of new post
 		// because we remove it for drafts.

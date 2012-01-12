@@ -98,7 +98,7 @@
 .elgg-breadcrumbs > li {
 	display: inline-block;
 }
-.elgg-breadcrumbs > li:after{
+.elgg-breadcrumbs > li:after {
 	content: "\003E";
 	padding: 0 4px;
 	font-weight: normal;
@@ -130,9 +130,9 @@
 }
 
 .elgg-menu-topbar > li > a {
-	padding: 2px 15px 0;
+	padding-top: 2px;
 	color: #eee;
-	margin-top: 1px;
+	margin: 1px 15px 0;
 }
 
 .elgg-menu-topbar > li > a:hover {
@@ -178,7 +178,6 @@
 	text-decoration: none;
 }
 
-
 .elgg-menu-site-default {
 	position: absolute;
 	bottom: 0;
@@ -191,62 +190,68 @@
 	margin-right: 1px;
 }
 
-.elgg-menu-site-default > li > a {color: white}
+.elgg-menu-site-default > li > a {
+	color: white;
+}
 
+.elgg-menu-site > li > ul {
+	display: none;
+	background-color: white;
+}
+
+.elgg-menu-site > li:hover > ul {
+	display: block;
+}
 
 .elgg-menu-site-default > .elgg-state-selected > a,
 .elgg-menu-site-default > li:hover > a {
 	background: white;
 	color: #555;
-	
+
 	-webkit-box-shadow: 2px -1px 1px rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: 2px -1px 1px rgba(0, 0, 0, 0.25);
 	box-shadow: 2px -1px 1px rgba(0, 0, 0, 0.25);
-	
+
 	-webkit-border-radius: 4px 4px 0 0;
 	-moz-border-radius: 4px 4px 0 0;
 	border-radius: 4px 4px 0 0;
 }
 
 .elgg-menu-site-more {
-	display: none;
 	position: relative;
 	left: -1px;
 	width: 100%;
-	z-index: 1;
 	min-width: 150px;
 	border: 1px solid #999;
 	border-top: 0;
-	
+
 	-webkit-border-radius: 0 0 4px 4px;
 	-moz-border-radius: 0 0 4px 4px;
 	border-radius: 0 0 4px 4px;
-	
+
 	-webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
 	box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
 }
 
-li:hover > .elgg-menu-site-more {
-	display: block;
-}
-
 .elgg-menu-site-more > li > a {
-	background: white;
+	background-color: white;
 	color: #555;
-	
+
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	border-radius: 0;
-	
+
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	box-shadow: none;
 }
+
 .elgg-menu-site-more > li > a:hover {
 	background: #4690D6;
 	color: white;
 }
+
 .elgg-menu-site-more > li:last-child > a,
 .elgg-menu-site-more > li:last-child > a:hover {
 	-webkit-border-radius: 0 0 4px 4px;
@@ -367,7 +372,10 @@ li:hover > .elgg-menu-site-more {
 	position: absolute;
 	z-index: 10000;
 
-	width: 165px;
+	overflow: hidden;
+
+	min-width: 165px;
+	max-width: 250px;
 	border: solid 1px;
 	border-color: #E5E5E5 #999 #999 #E5E5E5;
 	background-color: #FFF;
@@ -402,12 +410,12 @@ li:hover > .elgg-menu-site-more {
 }
 
 /* ***************************************
-	FOOTER
+	SITE FOOTER
 *************************************** */
 .elgg-menu-footer > li,
 .elgg-menu-footer > li > a {
 	display: inline-block;
-	color:#999;
+	color: #999;
 }
 
 .elgg-menu-footer > li:after {
@@ -421,6 +429,20 @@ li:hover > .elgg-menu-site-more {
 
 .elgg-menu-footer-alt {
 	float: left;
+}
+
+/* ***************************************
+	GENERAL MENU
+*************************************** */
+.elgg-menu-general > li,
+.elgg-menu-general > li > a {
+	display: inline-block;
+	color: #999;
+}
+
+.elgg-menu-general > li:after {
+	content: "\007C";
+	padding: 0 4px;
 }
 
 /* ***************************************
@@ -512,4 +534,26 @@ li:hover > .elgg-menu-site-more {
 *************************************** */
 .elgg-menu-extras {
 	margin-bottom: 15px;
+}
+
+/* ***************************************
+	WIDGET MENU
+*************************************** */
+.elgg-menu-widget > li {
+	position: absolute;
+	top: 4px;
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	padding: 2px 2px 0 0;
+}
+
+.elgg-menu-widget > .elgg-menu-item-collapse {
+	left: 5px;
+}
+.elgg-menu-widget > .elgg-menu-item-delete {
+	right: 5px;
+}
+.elgg-menu-widget > .elgg-menu-item-settings {
+	right: 25px;
 }

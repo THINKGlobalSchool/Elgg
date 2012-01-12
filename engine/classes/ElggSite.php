@@ -21,6 +21,10 @@
  * @package    Elgg.Core
  * @subpackage DataMode.Site
  * @link       http://docs.elgg.org/DataModel/Sites
+ * 
+ * @property string $name        The name or title of the website
+ * @property string $description A motto, mission statement, or description of the website
+ * @property string $url         The root web address for the site, including trailing slash
  */
 class ElggSite extends ElggEntity {
 
@@ -128,7 +132,7 @@ class ElggSite extends ElggEntity {
 		$row = get_site_entity_as_row($guid);
 		if (($row) && (!$this->isFullyLoaded())) {
 			// If $row isn't a cached copy then increment the counter
-			$this->attributes['tables_loaded'] ++;
+			$this->attributes['tables_loaded']++;
 		}
 
 		// Now put these into the attributes array as core values
@@ -136,6 +140,9 @@ class ElggSite extends ElggEntity {
 		foreach ($objarray as $key => $value) {
 			$this->attributes[$key] = $value;
 		}
+
+		// guid needs to be an int  http://trac.elgg.org/ticket/4111
+		$this->attributes['guid'] = (int)$this->attributes['guid'];
 
 		return true;
 	}
@@ -189,19 +196,20 @@ class ElggSite extends ElggEntity {
 	 *
 	 * @note You cannot disable the current site.
 	 *
-	 * @param string $reason Optional reason for disabling
+	 * @param string $reason    Optional reason for disabling
+	 * @param bool   $recursive Recursively disable all contained entities?
 	 *
 	 * @return bool
 	 * @throws SecurityException
 	 */
-	public function disable($reason = "") {
+	public function disable($reason = "", $recursive = true) {
 		global $CONFIG;
 
 		if ($CONFIG->site->getGUID() == $this->guid) {
 			throw new SecurityException('SecurityException:deletedisablecurrentsite');
 		}
 
-		return parent::disable($reason);
+		return parent::disable($reason, $recursive);
 	}
 
 	/**
@@ -211,7 +219,7 @@ class ElggSite extends ElggEntity {
 	 *                       accepted by elgg_get_entities(). Common parameters
 	 *                       include 'limit', and 'offset'.
 	 *                       Note: this was $limit before version 1.8
-	 * @param int $offset Offset @deprecated parameter
+	 * @param int   $offset  Offset @deprecated parameter
 	 *
 	 * @todo remove $offset in 2.0
 	 *
@@ -225,8 +233,9 @@ class ElggSite extends ElggEntity {
 				'offset' => $offset,
 			);
 		}
-		
+
 		$defaults = array(
+			'site_guids' => ELGG_ENTITIES_ANY_VALUE,
 			'relationship' => 'member_of_site',
 			'relationship_guid' => $this->getGUID(),
 			'inverse_relationship' => TRUE,
@@ -250,6 +259,7 @@ class ElggSite extends ElggEntity {
 	 */
 	public function listMembers($options = array()) {
 		$defaults = array(
+			'site_guids' => ELGG_ENTITIES_ANY_VALUE,
 			'relationship' => 'member_of_site',
 			'relationship_guid' => $this->getGUID(),
 			'inverse_relationship' => TRUE,
@@ -371,6 +381,7 @@ class ElggSite extends ElggEntity {
 			elgg_register_plugin_hook_handler('index', 'system', 'elgg_walled_garden_index', 1);
 
 			if (!$this->isPublicPage()) {
+				$_SESSION['last_forward_from'] = current_page_url();
 				register_error(elgg_echo('loggedinrequired'));
 				forward();
 			}
@@ -413,11 +424,15 @@ class ElggSite extends ElggEntity {
 			'resetpassword',
 			'action/user/requestnewpassword',
 			'action/user/passwordreset',
+			'action/security/refreshtoken',
+			'ajax/view/js/languages',
 			'upgrade\.php',
 			'xml-rpc\.php',
 			'mt/mt-xmlrpc\.cgi',
 			'css/.*',
-			'js/.*'
+			'js/.*',
+			'cache/css/.*',
+			'cache/js/.*',
 		);
 
 		// include a hook for plugin authors to include public pages

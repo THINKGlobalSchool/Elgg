@@ -68,9 +68,6 @@ class ElggCoreMetastringsTest extends ElggCoreUnitTest {
 		parent::__destruct();
 	}
 
-	/**
-	 * A basic test that will be called and fail.
-	 */
 	public function testDeleteByID() {
 		$db_prefix = elgg_get_config('dbprefix');
 		$annotations = $this->createAnnotations(1);
@@ -83,8 +80,8 @@ class ElggCoreMetastringsTest extends ElggCoreUnitTest {
 			$test = get_data($q);
 
 			$this->assertEqual($test[0]->id, $id);
-			$this->assertTrue(elgg_delete_metastring_based_object_by_id($id, $type));
-			$this->assertFalse(get_data($q));
+			$this->assertIdentical(true, elgg_delete_metastring_based_object_by_id($id, $type));
+			$this->assertIdentical(array(), get_data($q));
 		}
 	}
 
@@ -101,9 +98,6 @@ class ElggCoreMetastringsTest extends ElggCoreUnitTest {
 		}
 	}
 
-	/**
-	 * A basic test that will be called and fail.
-	 */
 	public function testEnableDisableByID() {
 		$db_prefix = elgg_get_config('dbprefix');
 		$annotations = $this->createAnnotations(1);

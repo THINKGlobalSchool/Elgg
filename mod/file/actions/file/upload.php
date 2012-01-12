@@ -19,6 +19,11 @@ if ($container_guid == 0) {
 
 elgg_make_sticky_form('file');
 
+// check if upload failed
+if (!empty($_FILES['upload']['name']) && $_FILES['upload']['error'] != 0) {
+	register_error(elgg_echo('file:cannotload'));
+	forward(REFERER);
+}
 
 // check whether this is a new file or an edit
 $new_file = true;
@@ -29,7 +34,6 @@ if ($guid > 0) {
 if ($new_file) {
 	// must have a file if a new file upload
 	if (empty($_FILES['upload']['name'])) {
-
 		$error = elgg_echo('file:nofile');
 		register_error($error);
 		forward(REFERER);
@@ -90,10 +94,11 @@ if (isset($_FILES['upload']['name']) && !empty($_FILES['upload']['name'])) {
 		$filestorename = elgg_strtolower(time().$_FILES['upload']['name']);
 	}
 
-	$file->setFilename($prefix.$filestorename);
-	$file->setMimeType($_FILES['upload']['type']);
+	$mime_type = $file->detectMimeType($_FILES['upload']['tmp_name'], $_FILES['upload']['type']);
+	$file->setFilename($prefix . $filestorename);
+	$file->setMimeType($mime_type);
 	$file->originalfilename = $_FILES['upload']['name'];
-	$file->simpletype = file_get_simple_type($_FILES['upload']['type']);
+	$file->simpletype = file_get_simple_type($mime_type);
 
 	// Open the file to guarantee the directory exists
 	$file->open("write");
@@ -104,7 +109,9 @@ if (isset($_FILES['upload']['name']) && !empty($_FILES['upload']['name'])) {
 
 	// if image, we need to create thumbnails (this should be moved into a function)
 	if ($guid && $file->simpletype == "image") {
-		$thumbnail = get_resized_image_from_existing_file($file->getFilenameOnFilestore(),60,60, true);
+		$file->icontime = time();
+		
+		$thumbnail = get_resized_image_from_existing_file($file->getFilenameOnFilestore(), 60, 60, true);
 		if ($thumbnail) {
 			$thumb = new ElggFile();
 			$thumb->setMimeType($_FILES['upload']['type']);
@@ -118,7 +125,7 @@ if (isset($_FILES['upload']['name']) && !empty($_FILES['upload']['name'])) {
 			unset($thumbnail);
 		}
 
-		$thumbsmall = get_resized_image_from_existing_file($file->getFilenameOnFilestore(),153,153, true);
+		$thumbsmall = get_resized_image_from_existing_file($file->getFilenameOnFilestore(), 153, 153, true);
 		if ($thumbsmall) {
 			$thumb->setFilename($prefix."smallthumb".$filestorename);
 			$thumb->open("write");
@@ -128,7 +135,7 @@ if (isset($_FILES['upload']['name']) && !empty($_FILES['upload']['name'])) {
 			unset($thumbsmall);
 		}
 
-		$thumblarge = get_resized_image_from_existing_file($file->getFilenameOnFilestore(),600,600, false);
+		$thumblarge = get_resized_image_from_existing_file($file->getFilenameOnFilestore(), 600, 600, false);
 		if ($thumblarge) {
 			$thumb->setFilename($prefix."largethumb".$filestorename);
 			$thumb->open("write");

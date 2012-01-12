@@ -9,6 +9,13 @@
  */
 class ElggMetadata extends ElggExtender {
 
+	/**
+	 * (non-PHPdoc)
+	 *
+	 * @see ElggData::initializeAttributes()
+	 *
+	 * @return void
+	 */
 	protected function initializeAttributes() {
 		parent::initializeAttributes();
 
@@ -45,11 +52,13 @@ class ElggMetadata extends ElggExtender {
 	/**
 	 * Determines whether or not the user can edit this piece of metadata
 	 *
+	 * @param int $user_guid The GUID of the user (defaults to currently logged in user)
+	 *
 	 * @return true|false Depending on permissions
 	 */
-	function canEdit() {
+	function canEdit($user_guid = 0) {
 		if ($entity = get_entity($this->get('entity_guid'))) {
-			return $entity->canEditMetadata($this);
+			return $entity->canEditMetadata($this, $user_guid);
 		}
 		return false;
 	}

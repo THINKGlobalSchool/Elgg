@@ -20,7 +20,7 @@ $english = array(
 	'login' => "Log in",
 	'loginok' => "You have been logged in.",
 	'loginerror' => "We couldn't log you in. Please check your credentials and try again.",
-	'login:empty' => "Username and password are required.",
+	'login:empty' => "Username/email and password are required.",
 	'login:baduser' => "Unable to load your user account.",
 	'auth:nopams' => "Internal error. No user authentication method installed.",
 
@@ -63,12 +63,13 @@ $english = array(
 	'InvalidClassException:NotValidElggStar' => "GUID:%d is not a valid %s",
 
 	'PluginException:MisconfiguredPlugin' => "%s (guid: %s) is a misconfigured plugin. It has been disabled. Please search the Elgg wiki for possible causes (http://docs.elgg.org/wiki/).",
-	'PluginException:CannotStart' => '%s (guid: %s) cannot start.  Reason: %s',
+	'PluginException:CannotStart' => '%s (guid: %s) cannot start and has been deactivated.  Reason: %s',
 	'PluginException:InvalidID' => "%s is an invalid plugin ID.",
 	'PluginException:InvalidPath' => "%s is an invalid plugin path.",
 	'PluginException:InvalidManifest' => 'Invalid manifest file for plugin %s',
 	'PluginException:InvalidPlugin' => '%s is not a valid plugin.',
 	'PluginException:InvalidPlugin:Details' => '%s is not a valid plugin: %s',
+	'PluginException:NullInstantiated' => 'ElggPlugin cannot be null instantiated. You must pass a GUID, a plugin ID, or a full path.',
 
 	'ElggPlugin:MissingID' => 'Missing plugin ID (guid %s)',
 	'ElggPlugin:NoPluginPackagePackage' => 'Missing ElggPluginPackage for plugin ID %s (guid %s)',
@@ -78,9 +79,9 @@ $english = array(
 	'ElggPluginPackage:InvalidPlugin:InvalidProvides' => 'Invalid provides type "%s"',
 	'ElggPluginPackage:InvalidPlugin:CircularDep' => 'Invalid %s dependency "%s" in plugin %s.  Plugins cannot conflict with or require something they provide!',
 
-	'ElggPlugin:Exception:CannotIncludeFile' => 'Cannot include %s for plugin %s (guid: %s) at %s.  Check permissions!',
-	'ElggPlugin:Exception:CannotRegisterViews' => 'Cannot open views dir for plugin %s (guid: %s) at %s.  Check permissions!',
-	'ElggPlugin:Exception:CannotRegisterLanguages' => 'Cannot register languages for plugin %s (guid: %s) at %s.  Check permissions!',
+	'ElggPlugin:Exception:CannotIncludeFile' => 'Cannot include %s for plugin %s (guid: %s) at %s.',
+	'ElggPlugin:Exception:CannotRegisterViews' => 'Cannot open views dir for plugin %s (guid: %s) at %s.',
+	'ElggPlugin:Exception:CannotRegisterLanguages' => 'Cannot register languages for plugin %s (guid: %s) at %s.',
 	'ElggPlugin:Exception:NoID' => 'No ID for plugin guid %s!',
 
 	'PluginException:ParserError' => 'Error parsing manifest with API version %s in plugin %s.',
@@ -166,12 +167,13 @@ $english = array(
 	'InvalidParameterException:DoesNotBelongOrRefer' => "Does not belong to entity or refer to entity.",
 	'InvalidParameterException:MissingParameter' => "Missing parameter, you need to provide a GUID.",
 	'InvalidParameterException:LibraryNotRegistered' => '%s is not a registered library',
+	'InvalidParameterException:LibraryNotFound' => 'Could not load the %s library from %s',
 
 	'APIException:ApiResultUnknown' => "API Result is of an unknown type, this should never happen.",
 	'ConfigurationException:NoSiteID' => "No site ID has been specified.",
 	'SecurityException:APIAccessDenied' => "Sorry, API access has been disabled by the administrator.",
 	'SecurityException:NoAuthMethods' => "No authentication methods were found that could authenticate this API request.",
-	'SecurityException:UnexpectedOutputInGatekeeper' => 'Unexpected output in gatekeeper call. Halting execution for security. Search http://docs.elgg.org/ for more information.',
+	'SecurityException:ForwardFailedToRedirect' => 'Redirect could not be issued due to headers already being sent. Halting execution for security. Search http://docs.elgg.org/ for more information.',
 	'InvalidParameterException:APIMethodOrFunctionNotSet' => "Method or function not set in call in expose_method()",
 	'InvalidParameterException:APIParametersArrayStructure' => "Parameters array structure is incorrect for call to expose method '%s'",
 	'InvalidParameterException:UnrecognisedHttpMethod' => "Unrecognised http method %s for api method '%s'",
@@ -221,9 +223,10 @@ $english = array(
 	'RegistrationException:EmptyPassword' => 'The password fields cannot be empty',
 	'RegistrationException:PasswordMismatch' => 'Passwords must match',
 	'LoginException:BannedUser' => 'You have been banned from this site and cannot log in',
-	'LoginException:UsernameFailure' => 'We could not log you in. Please check your username and password.',
-	'LoginException:PasswordFailure' => 'We could not log you in. Please check your username and password.',
+	'LoginException:UsernameFailure' => 'We could not log you in. Please check your username/email and password.',
+	'LoginException:PasswordFailure' => 'We could not log you in. Please check your username/email and password.',
 	'LoginException:AccountLocked' => 'Your account has been locked for too many log in failures.',
+	'LoginException:ChangePasswordFailure' => 'Failed current password check.',
 
 	'memcache:notinstalled' => 'PHP memcache module not installed, you must install php5-memcache',
 	'memcache:noservers' => 'No memcache servers defined, please populate the $CONFIG->memcache_servers variable',
@@ -235,6 +238,11 @@ $english = array(
 	'pageownerunavailable' => 'Warning: The page owner %d is not accessible!',
 	'viewfailure' => 'There was an internal failure in the view %s',
 	'changebookmark' => 'Please change your bookmark for this page',
+	'noaccess' => 'This content has been removed, is invalid, or you do not have permission to view it.',
+
+	'error:default' => 'Oops...something went wrong.',
+	'error:404' => 'Sorry. We could not find the page that you requested.',
+
 /**
  * API
  */
@@ -262,6 +270,8 @@ $english = array(
 	'PUBLIC' => "Public",
 	'access:friends:label' => "Friends",
 	'access' => "Access",
+	'access:limited:label' => "Limited",
+	'access:help' => "The access level",
 
 /**
  * Dashboard and widgets
@@ -355,6 +365,7 @@ $english = array(
 	'avatar:preview' => 'Preview',
 	'avatar:upload' => 'Upload a new avatar',
 	'avatar:current' => 'Current avatar',
+	'avatar:revert' => 'Revert your avatar to the default icon',
 	'avatar:crop:title' => 'Avatar cropping tool',
 	'avatar:upload:instructions' => "Your avatar is displayed throughout the site. You can change it as often as you'd like. (File formats accepted: GIF, JPG or PNG)",
 	'avatar:create:instructions' => 'Click and drag a square below to match how you want your avatar cropped. A preview will appear in the box on the right. When you are happy with the preview, click \'Create your avatar\'. This cropped version will be used throughout the site as your avatar.',
@@ -363,6 +374,8 @@ $english = array(
 	'avatar:resize:fail' => 'Resize of the avatar failed',
 	'avatar:crop:success' => 'Cropping the avatar succeeded',
 	'avatar:crop:fail' => 'Avatar cropping failed',
+	'avatar:revert:success' => 'Reverting the avatar succeeded',
+	'avatar:revert:fail' => 'Avatar revert failed',
 
 	'profile:edit' => 'Edit profile',
 	'profile:aboutme' => "About me",
@@ -378,16 +391,24 @@ $english = array(
 	'profile:twitter' => "Twitter username",
 	'profile:saved' => "Your profile was successfully saved.",
 
+	'profile:field:text' => 'Short text',
+	'profile:field:longtext' => 'Large text area',
+	'profile:field:tags' => 'Tags',
+	'profile:field:url' => 'Web address',
+	'profile:field:email' => 'Email address',
+	'profile:field:location' => 'Location',
+	'profile:field:date' => 'Date',
+
 	'admin:appearance:profile_fields' => 'Edit Profile Fields',
 	'profile:edit:default' => 'Edit profile fields',
 	'profile:label' => "Profile label",
 	'profile:type' => "Profile type",
 	'profile:editdefault:delete:fail' => 'Removed default profile item field failed',
-	'profile:editdefault:delete:success' => 'Default profile item deleted!',
-	'profile:defaultprofile:reset' => 'Default system profile reset',
+	'profile:editdefault:delete:success' => 'Profile field deleted',
+	'profile:defaultprofile:reset' => 'Profile fields reset to the system default',
 	'profile:resetdefault' => 'Reset default profile',
 	'profile:explainchangefields' => "You can replace the existing profile fields with your own using the form below. \n\n Give the new profile field a label, for example, 'Favorite team', then select the field type (eg. text, url, tags), and click the 'Add' button. To re-order the fields drag on the handle next to the field label. To edit a field label - click on the label's text to make it editable. \n\n At any time you can revert back to the default profile set up, but you will lose any information already entered into custom fields on profile pages.",
-	'profile:editdefault:success' => 'Item successfully added to default profile',
+	'profile:editdefault:success' => 'New profile field added',
 	'profile:editdefault:fail' => 'Default profile could not be saved',
 
 
@@ -408,12 +429,14 @@ $english = array(
 	'river' => "River",
 	'river:friend:user:default' => "%s is now a friend with %s",
 	'river:update:user:avatar' => '%s has a new avatar',
+	'river:update:user:profile' => '%s has updated their profile',
 	'river:noaccess' => 'You do not have permission to view this item.',
 	'river:posted:generic' => '%s posted',
 	'riveritem:single:user' => 'a user',
 	'riveritem:plural:user' => 'some users',
 	'river:ingroup' => 'in the group %s',
 	'river:none' => 'No activity',
+	'river:update' => 'Update for %s',
 
 	'river:widget:title' => "Activity",
 	'river:widget:description' => "Display latest activity",
@@ -426,6 +449,7 @@ $english = array(
  */
 	'notifications:usersettings' => "Notification settings",
 	'notifications:methods' => "Please specify which methods you want to permit.",
+	'notification:method:email' => 'Email',
 
 	'notifications:usersettings:save:ok' => "Your notification settings were successfully saved.",
 	'notifications:usersettings:save:fail' => "There was a problem saving your notification settings.",
@@ -466,18 +490,20 @@ $english = array(
 	'account' => "Account",
 	'settings' => "Settings",
 	'tools' => "Tools",
+	'settings:edit' => 'Edit settings',
 
 	'register' => "Register",
 	'registerok' => "You have successfully registered for %s.",
 	'registerbad' => "Your registration was unsuccessful because of an unknown error.",
 	'registerdisabled' => "Registration has been disabled by the system administrator",
+	'register:fields' => 'All fields are required',
 
 	'registration:notemail' => 'The email address you provided does not appear to be a valid email address.',
 	'registration:userexists' => 'That username already exists',
 	'registration:usernametooshort' => 'Your username must be a minimum of %u characters long.',
 	'registration:passwordtooshort' => 'The password must be a minimum of %u characters long.',
 	'registration:dupeemail' => 'This email address has already been registered.',
-	'registration:invalidchars' => 'Sorry, your username contains the following invalid character: %s.  All of these characters are invalid: %s',
+	'registration:invalidchars' => 'Sorry, your username contains the character %s which is invalid. The following characters are invalid: %s',
 	'registration:emailnotvalid' => 'Sorry, the email address you entered is invalid on this system',
 	'registration:passwordnotvalid' => 'Sorry, the password you entered is invalid on this system',
 	'registration:usernamenotvalid' => 'Sorry, the username you entered is invalid on this system',
@@ -514,7 +540,7 @@ $english = array(
 	'user:password:resetreq:success' => 'Successfully requested a new password, email sent',
 	'user:password:resetreq:fail' => 'Could not request a new password.',
 
-	'user:password:text' => 'To request a new password, enter your username below and click the Request button.',
+	'user:password:text' => 'To request a new password, enter your username or email address below and click the Request button.',
 
 	'user:persistent' => 'Remember me',
 
@@ -542,9 +568,11 @@ $english = array(
 
 	'admin:statistics' => "Statistics",
 	'admin:statistics:overview' => 'Overview',
+	'admin:statistics:server' => 'Server Info',
 
 	'admin:appearance' => 'Appearance',
-	'admin:utilities' => 'Utilities',
+	'admin:administer_utilities' => 'Utilities',
+	'admin:develop_utilities' => 'Utilities',
 
 	'admin:users' => "Users",
 	'admin:users:online' => 'Currently Online',
@@ -591,6 +619,12 @@ $english = array(
 	// argh, this is ugly
 	'admin:widget:admin_welcome:outro' => '<br />Be sure to check out the resources available through the footer links and thank you for using Elgg!',
 
+	'admin:widget:control_panel' => 'Control panel',
+	'admin:widget:control_panel:help' => "Provides easy access to common controls",
+
+	'admin:cache:flush' => 'Flush the caches',
+	'admin:cache:flushed' => "The site's caches have been flushed",
+
 	'admin:footer:faq' => 'Administration FAQ',
 	'admin:footer:manual' => 'Administration Manual',
 	'admin:footer:community_forums' => 'Elgg Community Forums',
@@ -601,6 +635,7 @@ $english = array(
 	'admin:plugins:category:inactive' => 'Inactive plugins',
 	'admin:plugins:category:admin' => 'Admin',
 	'admin:plugins:category:bundled' => 'Bundled',
+	'admin:plugins:category:nonbundled' => 'Non-bundled',
 	'admin:plugins:category:content' => 'Content',
 	'admin:plugins:category:development' => 'Development',
 	'admin:plugins:category:enhancement' => 'Enhancements',
@@ -611,6 +646,7 @@ $english = array(
 	'admin:plugins:category:multimedia' => 'Multimedia',
 	'admin:plugins:category:theme' => 'Themes',
 	'admin:plugins:category:widget' => 'Widgets',
+	'admin:plugins:category:utility' => 'Utilities',
 
 	'admin:plugins:sort:priority' => 'Priority',
 	'admin:plugins:sort:alpha' => 'Alphabetical',
@@ -659,25 +695,23 @@ $english = array(
 
 	'admin:plugins:set_priority:yes' => "Reordered %s.",
 	'admin:plugins:set_priority:no' => "Could not reorder %s.",
+	'admin:plugins:set_priority:no_with_msg' => "Could not reorder %s. Error: %s",
 	'admin:plugins:deactivate:yes' => "Deactivated %s.",
 	'admin:plugins:deactivate:no' => "Could not deactivate %s.",
+	'admin:plugins:deactivate:no_with_msg' => "Could not deactivate %s. Error: %s",
 	'admin:plugins:activate:yes' => "Activated %s.",
 	'admin:plugins:activate:no' => "Could not activate %s.",
+	'admin:plugins:activate:no_with_msg' => "Could not activate %s. Error: %s",
 	'admin:plugins:categories:all' => 'All categories',
 	'admin:plugins:plugin_website' => 'Plugin website',
 	'admin:plugins:author' => '%s',
 	'admin:plugins:version' => 'Version %s',
-	'admin:plugins:simple' => 'Simple',
-	'admin:plugins:advanced' => 'Advanced',
 	'admin:plugin_settings' => 'Plugin Settings',
-	'admin:plugins:simple_simple_fail' => 'Could not save settings.',
-	'admin:plugins:simple_simple_success' => 'Settings saved.',
-	'admin:plugins:simple:cannot_activate' => 'Cannot activate this plugin. Check the advanced plugin admin area for more information.',
 	'admin:plugins:warning:unmet_dependencies_active' => 'This plugin is active but has unmet dependencies. You may encounter problems. See "more info" below for details.',
 
 	'admin:plugins:dependencies:type' => 'Type',
 	'admin:plugins:dependencies:name' => 'Name',
-	'admin:plugins:dependencies:expected_value' => 'Tested Value',
+	'admin:plugins:dependencies:expected_value' => 'Expected Value',
 	'admin:plugins:dependencies:local_value' => 'Actual value',
 	'admin:plugins:dependencies:comment' => 'Comment',
 
@@ -692,6 +726,17 @@ $english = array(
 	'admin:statistics:label:version' => "Elgg version",
 	'admin:statistics:label:version:release' => "Release",
 	'admin:statistics:label:version:version' => "Version",
+
+	'admin:server:label:php' => 'PHP',
+	'admin:server:label:web_server' => 'Web Server',
+	'admin:server:label:server' => 'Server',
+	'admin:server:label:log_location' => 'Log Location',
+	'admin:server:label:php_version' => 'PHP version',
+	'admin:server:label:php_ini' => 'PHP ini file location',
+	'admin:server:label:php_log' => 'PHP Log',
+	'admin:server:label:mem_avail' => 'Memory available',
+	'admin:server:label:mem_used' => 'Memory used',
+	'admin:server:error_log' => "Web server's error log",
 
 	'admin:user:label:search' => "Find users:",
 	'admin:user:label:searchbutton' => "Search",
@@ -809,6 +854,10 @@ $english = array(
 	'upgrade' => 'Upgrade',
 	'sort' => 'Sort',
 	'filter' => 'Filter',
+	'new' => 'New',
+	'add' => 'Add',
+	'create' => 'Create',
+	'revert' => 'Revert',
 
 	'site' => 'Site',
 	'activity' => 'Activity',
@@ -818,8 +867,6 @@ $english = array(
 	'down' => 'Down',
 	'top' => 'Top',
 	'bottom' => 'Bottom',
-
-	'more' => 'more',
 
 	'invite' => "Invite",
 
@@ -867,6 +914,9 @@ $english = array(
 	'metadata' => "Metadata",
 	'tagcloud' => "Tag cloud",
 	'tagcloud:allsitetags' => "All site tags",
+
+	'on' => 'On',
+	'off' => 'Off',
 
 /**
  * Entity actions
@@ -1017,7 +1067,7 @@ Once you have logged in, we highly recommend that you change your password.
 	'email:settings' => "Email settings",
 	'email:address:label' => "Your email address",
 
-	'email:save:success' => "New email address saved, verification requested.",
+	'email:save:success' => "New email address saved. Verification is requested.",
 	'email:save:fail' => "Your new email address could not be saved.",
 
 	'friend:newfriend:subject' => "%s has made you a friend!",
@@ -1042,7 +1092,7 @@ Your password has been reset to: %s",
 
 Somebody (from the IP address %s) has requested a new password for their account.
 
-If you requested this click on the link below, otherwise ignore this email.
+If you requested this, click on the link below. Otherwise ignore this email.
 
 %s
 ",
@@ -1051,10 +1101,10 @@ If you requested this click on the link below, otherwise ignore this email.
  * user default access
  */
 
-'default_access:settings' => "Your default access level",
-'default_access:label' => "Default access",
-'user:default_access:success' => "Your new default access level was saved.",
-'user:default_access:failure' => "Your new default access level could not be saved.",
+	'default_access:settings' => "Your default access level",
+	'default_access:label' => "Default access",
+	'user:default_access:success' => "Your new default access level was saved.",
+	'user:default_access:failure' => "Your new default access level could not be saved.",
 
 /**
  * XML-RPC
@@ -1080,6 +1130,7 @@ If you requested this click on the link below, otherwise ignore this email.
 	'generic_comment:notdeleted' => "Sorry, we could not delete this comment.",
 	'generic_comment:failure' => "An unexpected error occurred when adding your comment. Please try again.",
 	'generic_comment:none' => 'No comments',
+	'generic_comment:title' => 'Comment by %s',
 
 	'generic_comment:email:subject' => 'You have a new comment!',
 	'generic_comment:email:body' => "You have a new comment on your item \"%s\" from %s. It reads:

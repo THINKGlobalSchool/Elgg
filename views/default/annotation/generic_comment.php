@@ -2,8 +2,8 @@
 /**
  * Elgg generic comment view
  *
- * @uses $vars['annotation']    ElggAnnotation object
- * @uses $vars['full_view']          Display fill view or brief view
+ * @uses $vars['annotation']  ElggAnnotation object
+ * @uses $vars['full_view']   Display fill view or brief view
  */
 
 if (!isset($vars['annotation'])) {
@@ -32,7 +32,7 @@ if ($full_view) {
 	$menu = elgg_view_menu('annotation', array(
 		'annotation' => $comment,
 		'sort_by' => 'priority',
-		'class' => 'elgg-menu-hz right',
+		'class' => 'elgg-menu-hz float-alt',
 	));
 
 	$comment_text = elgg_view("output/longtext", array("value" => $comment->value));

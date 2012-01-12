@@ -29,6 +29,7 @@ if ($title_link === '') {
 	$params = array(
 		'text' => $text,
 		'href' => $entity->getURL(),
+		'is_trusted' => true,
 	);
 	$title_link = elgg_view('output/url', $params);
 }
@@ -45,9 +46,14 @@ if ($tags !== false) {
 if ($metadata) {
 	echo $metadata;
 }
-echo "<h3>$title_link</h3>";
+if ($title_link) {
+	echo "<h3>$title_link</h3>";
+}
 echo "<div class=\"elgg-subtext\">$subtitle</div>";
 echo $tags;
+
+echo elgg_view('object/summary/extend', $vars);
+
 if ($content) {
 	echo "<div class=\"elgg-content\">$content</div>";
 }

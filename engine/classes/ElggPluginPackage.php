@@ -33,7 +33,9 @@ class ElggPluginPackage {
 	 */
 	private $textFiles = array(
 		'README.txt', 'CHANGES.txt', 
-		'INSTALL.txt', 'COPYRIGHT.txt', 'LICENSE.txt'
+		'INSTALL.txt', 'COPYRIGHT.txt', 'LICENSE.txt',
+
+		'README', 'README.md', 'README.markdown'
 	);
 
 	/**
@@ -301,6 +303,8 @@ class ElggPluginPackage {
 
 	/**
 	 * Returns an array of present and readable text files
+	 *
+	 * @return array
 	 */
 	public function getTextFilenames() {
 		return $this->textFiles;
@@ -347,6 +351,7 @@ class ElggPluginPackage {
 					$conflict['name'] = $plugin->getManifest()->getName();
 
 					if (!$full_report && !$result['status']) {
+						$this->errorMsg = "Conflicts with plugin \"{$plugin->getManifest()->getName()}\".";
 						return $result['status'];
 					} else {
 						$report[] = array(
@@ -399,6 +404,7 @@ class ElggPluginPackage {
 
 				// unless we're doing a full report, break as soon as we fail.
 				if (!$full_report && !$result['status']) {
+					$this->errorMsg = "Missing dependencies.";
 					return $result['status'];
 				} else {
 					// build report element and comment

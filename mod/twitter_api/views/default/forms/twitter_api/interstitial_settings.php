@@ -55,7 +55,8 @@ echo elgg_view('input/submit', array(
 ));
 
 echo elgg_view('output/url', array(
-	'class' => 'right',
+	'class' => 'float-alt',
 	'text' => elgg_echo('twitter_api:interstitial:no_thanks'),
 	'href' => '/',
+	'is_trusted' => true,
 ));
