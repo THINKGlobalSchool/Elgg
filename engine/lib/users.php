@@ -497,20 +497,26 @@ $timelower = 0, $timeupper = 0) {
  * @param int    $timelower      The earliest time the entity can have been created. Default: all
  * @param int    $timeupper      The latest time the entity can have been created. Default: all
  *
- * @return string The list in a form suitable to display
+ * @return string
  */
 function list_user_friends_objects($user_guid, $subtype = "", $limit = 10, $full_view = true,
 $listtypetoggle = true, $pagination = true, $timelower = 0, $timeupper = 0) {
 
-	$offset = (int) get_input('offset');
-	$limit = (int) $limit;
-	$count = (int) count_user_friends_objects($user_guid, $subtype, $timelower, $timeupper);
+	$offset = (int)get_input('offset');
+	$limit = (int)$limit;
+	$count = (int)count_user_friends_objects($user_guid, $subtype, $timelower, $timeupper);
 
 	$entities = get_user_friends_objects($user_guid, $subtype, $limit, $offset,
 		$timelower, $timeupper);
 
-	return elgg_view_entity_list($entities, $count, $offset, $limit, $full_view,
-		$listtypetoggle, $pagination);
+	return elgg_view_entity_list($entities, array(
+		'count' => $count,
+		'offset' => $offset,
+		'limit' => $limit,
+		'full_view' => $full_view,
+		'list_type_toggle' => $listtypetoggle,
+		'pagination' => $pagination,
+	));
 }
 
 /**
@@ -606,11 +612,11 @@ function get_user_by_code($code) {
 }
 
 /**
- * Get an array of users from their email addresses
+ * Get an array of users from an email address
  *
  * @param string $email Email address.
  *
- * @return Array of users
+ * @return array
  */
 function get_user_by_email($email) {
 	global $CONFIG;
@@ -963,8 +969,8 @@ $allow_multiple_emails = false, $friend_guid = 0, $invitecode = '') {
 				$friend_user->addFriend($user->guid);
 
 				// @todo Should this be in addFriend?
-				add_to_river('friends/river/create', 'friend', $user->getGUID(), $friend_guid);
-				add_to_river('friends/river/create', 'friend', $friend_guid, $user->getGUID());
+				add_to_river('river/relationship/friend/create', 'friend', $user->getGUID(), $friend_guid);
+				add_to_river('river/relationship/friend/create', 'friend', $friend_guid, $user->getGUID());
 			}
 		}
 	}

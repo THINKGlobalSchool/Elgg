@@ -122,6 +122,7 @@ function file_page_handler($page) {
 			include "$file_dir/friends.php";
 			break;
 		case 'view':
+		case 'read': // Elgg 1.7 compatibility
 			set_input('guid', $page[1]);
 			include "$file_dir/view.php";
 			break;
@@ -199,9 +200,13 @@ function file_notify_message($hook, $entity_type, $returnvalue, $params) {
 	if (($entity instanceof ElggEntity) && ($entity->getSubtype() == 'file')) {
 		$descr = $entity->description;
 		$title = $entity->title;
-		$url = elgg_get_site_url() . "view/" . $entity->guid;
 		$owner = $entity->getOwnerEntity();
-		return $owner->name . ' ' . elgg_echo("file:via") . ': ' . $entity->title . "\n\n" . $descr . "\n\n" . $entity->getURL();
+		return elgg_echo('file:notification', array(
+			$owner->name,
+			$title,
+			$descr,
+			$entity->getURL()
+		));
 	}
 	return null;
 }

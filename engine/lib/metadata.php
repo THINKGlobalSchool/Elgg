@@ -294,11 +294,11 @@ function elgg_get_metadata(array $options = array()) {
  * Deletes metadata based on $options.
  *
  * @warning Unlike elgg_get_metadata() this will not accept an empty options array!
- *          This requires some constraints: metadata_owner_guid(s),
- *          metadata_name(s), metadata_value(s), or limit must be set.
+ *          This requires at least one constraint: metadata_owner_guid(s),
+ *          metadata_name(s), metadata_value(s), or guid(s) must be set.
  *
- * @param array $options An options array. {@See elgg_get_metadata()}
- * @return mixed
+ * @param array $options An options array. {@see elgg_get_metadata()}
+ * @return mixed Null if the metadata name is invalid. Bool on success or fail.
  * @since 1.8.0
  */
 function elgg_delete_metadata(array $options) {
@@ -307,7 +307,8 @@ function elgg_delete_metadata(array $options) {
 	}
 
 	$options['metastring_type'] = 'metadata';
-	return elgg_batch_metastring_based_objects($options, 'elgg_batch_delete_callback');
+	$result = elgg_batch_metastring_based_objects($options, 'elgg_batch_delete_callback');
+	return $result;
 }
 
 /**
@@ -745,7 +746,7 @@ function export_metadata_plugin_hook($hook, $entity_type, $returnvalue, $params)
 
 /**
  * Takes in a comma-separated string and returns an array of tags
- * which have been trimmed and set to lower case
+ * which have been trimmed
  *
  * @param string $string Comma-separated tag string
  *
@@ -754,12 +755,7 @@ function export_metadata_plugin_hook($hook, $entity_type, $returnvalue, $params)
 function string_to_tag_array($string) {
 	if (is_string($string)) {
 		$ar = explode(",", $string);
-		// trim blank spaces
 		$ar = array_map('trim', $ar);
-		// make lower case : [Marcus Povey 20090605 - Using mb wrapper function
-		// using UTF8 safe function where available]
-		$ar = array_map('elgg_strtolower', $ar);
-		// Remove null values
 		$ar = array_filter($ar, 'is_not_null');
 		return $ar;
 	}

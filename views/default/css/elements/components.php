@@ -85,7 +85,11 @@
 	width: 100%;
 	border-top: 1px solid #ccc;
 }
-.elgg-table-alt td {
+.elgg-table-alt th {
+	background-color: #eee;
+	font-weight: bold;
+}
+.elgg-table-alt td, .elgg-table-alt th {
 	padding: 2px 4px 2px 4px;
 	border-bottom: 1px solid #ccc;
 }
@@ -265,17 +269,16 @@
 	Tags
 *************************************** */
 .elgg-tags {
-	display: inline;
 	font-size: 85%;
 }
-.elgg-tags li {
-	display: inline;
+.elgg-tags > li {
+	float:left;
 	margin-right: 5px;
 }
-.elgg-tags li:after {
+.elgg-tags li.elgg-tag:after {
 	content: ",";
 }
-.elgg-tags li:last-child:after {
+.elgg-tags li.elgg-tag:last-child:after {
 	content: "";
 }
 .elgg-tagcloud {

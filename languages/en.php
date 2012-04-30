@@ -37,6 +37,7 @@ $english = array(
  * Errors
  */
 	'exception:title' => "Fatal Error.",
+	'exception:contact_admin' => 'An unrecoverable error has occurred and has been logged. Contact the site administrator with the following information:',
 
 	'actionundefined' => "The requested action (%s) was not defined in the system.",
 	'actionnotfound' => "The action file for %s was not found.",
@@ -239,6 +240,7 @@ $english = array(
 	'viewfailure' => 'There was an internal failure in the view %s',
 	'changebookmark' => 'Please change your bookmark for this page',
 	'noaccess' => 'This content has been removed, is invalid, or you do not have permission to view it.',
+	'error:missing_data' => 'There was some data missing in your request',
 
 	'error:default' => 'Oops...something went wrong.',
 	'error:404' => 'Sorry. We could not find the page that you requested.',
@@ -293,7 +295,7 @@ $english = array(
 	'widget' => "Widget",
 	'item:object:widget' => "Widgets",
 	'widgets:save:success' => "The widget was successfully saved.",
-	'widgets:save:failure' => "We could not save your widget. Please try again.",
+	'widgets:save:failure' => "We could not save your widget.",
 	'widgets:add:success' => "The widget was successfully added.",
 	'widgets:add:failure' => "We could not add your widget.",
 	'widgets:move:failure' => "We could not store the new widget position.",
@@ -324,12 +326,12 @@ $english = array(
 	'friend:remove' => "Remove friend",
 
 	'friends:add:successful' => "You have successfully added %s as a friend.",
-	'friends:add:failure' => "We couldn't add %s as a friend. Please try again.",
+	'friends:add:failure' => "We couldn't add %s as a friend.",
 
 	'friends:remove:successful' => "You have successfully removed %s from your friends.",
-	'friends:remove:failure' => "We couldn't remove %s from your friends. Please try again.",
+	'friends:remove:failure' => "We couldn't remove %s from your friends.",
 
-	'friends:none' => "This user hasn't added anyone as a friend yet.",
+	'friends:none' => "No friends yet.",
 	'friends:none:you' => "You don't have any friends yet.",
 
 	'friends:none:found' => "No friends were found.",
@@ -560,6 +562,7 @@ $english = array(
 
 	'admin:configuration:success' => "Your settings have been saved.",
 	'admin:configuration:fail' => "Your settings could not be saved.",
+	'admin:configuration:dataroot:relative_path' => 'Cannot set "%s" as the dataroot because it is not an absolute path.',
 
 	'admin:unknown_section' => 'Invalid Admin Section.',
 
@@ -664,6 +667,7 @@ $english = array(
 /**
  * Plugins
  */
+	'plugins:disabled' => 'Plugins are being loaded because a file named "disabled" is in the mod directory.',
 	'plugins:settings:save:ok' => "Settings for the %s plugin were saved successfully.",
 	'plugins:settings:save:fail' => "There was a problem saving settings for the %s plugin.",
 	'plugins:usersettings:save:ok' => "User settings for the %s plugin were saved successfully.",
@@ -1031,12 +1035,12 @@ Once you have logged in, we highly recommend that you change your password.
 	'installation:simplecache:description' => "The simple cache increases performance by caching static content including some CSS and JavaScript files. Normally you will want this on.",
 	'installation:simplecache:label' => "Use simple cache (recommended)",
 
-	'installation:viewpathcache:description' => "The view filepath cache decreases the loading times of plugins by caching the location of their views.",
-	'installation:viewpathcache:label' => "Use view filepath cache (recommended)",
+	'installation:systemcache:description' => "The system cache decreases the loading time of the Elgg engine by caching data to files.",
+	'installation:systemcache:label' => "Use system cache (recommended)",
 
 	'upgrading' => 'Upgrading...',
 	'upgrade:db' => 'Your database was upgraded.',
-	'upgrade:core' => 'Your elgg installation was upgraded.',
+	'upgrade:core' => 'Your Elgg installation was upgraded.',
 	'upgrade:unable_to_upgrade' => 'Unable to upgrade.',
 	'upgrade:unable_to_upgrade_info' =>
 		'This installation cannot be upgraded because legacy views
@@ -1128,7 +1132,7 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	'generic_comment:blank' => "Sorry, you need to actually put something in your comment before we can save it.",
 	'generic_comment:notfound' => "Sorry, we could not find the specified item.",
 	'generic_comment:notdeleted' => "Sorry, we could not delete this comment.",
-	'generic_comment:failure' => "An unexpected error occurred when adding your comment. Please try again.",
+	'generic_comment:failure' => "An unexpected error occurred when adding your comment.",
 	'generic_comment:none' => 'No comments',
 	'generic_comment:title' => 'Comment by %s',
 
@@ -1164,7 +1168,7 @@ You cannot reply to this email.",
  * Action gatekeeper
  */
 	'actiongatekeeper:missingfields' => 'Form is missing __token or __ts fields',
-	'actiongatekeeper:tokeninvalid' => "We encountered an error (token mismatch). This probably means that the page you were using expired. Please try again.",
+	'actiongatekeeper:tokeninvalid' => "We encountered an error (token mismatch). This probably means that the page you were using expired.",
 	'actiongatekeeper:timeerror' => 'The page you were using has expired. Please refresh and try again.',
 	'actiongatekeeper:pluginprevents' => 'A extension has prevented this form from being submitted.',
 

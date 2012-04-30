@@ -27,7 +27,16 @@ $english = array(
 	'pages:revision' => "Revision",
 
 	'pages:navigation' => "Navigation",
-	'pages:via' => "via pages",
+	'pages:new' => "A new page",
+	'pages:notification' =>
+'%s added a new page:
+
+%s
+%s
+
+View and comment on the new page:
+%s
+',
 	'item:object:page_top' => 'Top-level pages',
 	'item:object:page' => 'Pages',
 	'pages:nogroup' => 'This group does not have any pages yet',

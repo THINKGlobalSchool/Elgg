@@ -995,7 +995,8 @@ function elgg_trigger_plugin_hook($hook, $type, $params = null, $returnvalue = n
  * @access private
  */
 function _elgg_php_exception_handler($exception) {
-	error_log("*** FATAL EXCEPTION *** : " . $exception);
+	$timestamp = time();
+	error_log("Exception #$timestamp: $exception");
 
 	// Wipe any existing output buffer
 	ob_end_clean();
@@ -1011,7 +1012,17 @@ function _elgg_php_exception_handler($exception) {
 		$CONFIG->pagesetupdone = true;
 
 		elgg_set_viewtype('failsafe');
-		$body = elgg_view("messages/exceptions/exception", array('object' => $exception));
+		if (elgg_is_admin_logged_in()) {
+			$body = elgg_view("messages/exceptions/admin_exception", array(
+				'object' => $exception,
+				'ts' => $timestamp
+			));
+		} else {
+			$body = elgg_view("messages/exceptions/exception", array(
+				'object' => $exception,
+				'ts' => $timestamp
+			));
+		}
 		echo elgg_view_page(elgg_echo('exception:title'), $body);
 	} catch (Exception $e) {
 		$timestamp = time();
@@ -1959,7 +1970,7 @@ function elgg_is_valid_options_for_batch_operation($options, $type) {
 	// at least one of these is required.
 	$required = array(
 		// generic restraints
-		'guid', 'guids', 'limit'
+		'guid', 'guids'
 	);
 
 	switch ($type) {
@@ -2010,11 +2021,35 @@ function elgg_walled_garden_index() {
 	elgg_load_css('elgg.walled_garden');
 	elgg_load_js('elgg.walled_garden');
 	
-	$body = elgg_view('core/walled_garden/body');
+	$content = elgg_view('core/walled_garden/login');
 
+	$params = array(
+		'content' => $content,
+		'class' => 'elgg-walledgarden-double',
+		'id' => 'elgg-walledgarden-login',
+	);
+	$body = elgg_view_layout('walled_garden', $params);
 	echo elgg_view_page('', $body, 'walled_garden');
 
 	// return true to prevent other plugins from adding a front page
+	return true;
+}
+
+/**
+ * Serve walled garden sections
+ *
+ * @param array $page Array of URL segments
+ * @return string
+ * @access private
+ */
+function _elgg_walled_garden_ajax_handler($page) {
+	$view = $page[0];
+	$params = array(
+		'content' => elgg_view("core/walled_garden/$view"),
+		'class' => 'elgg-walledgarden-single hidden',
+		'id' => str_replace('_', '-', "elgg-walledgarden-$view"),
+	);
+	echo elgg_view_layout('walled_garden', $params);
 	return true;
 }
 
@@ -2038,10 +2073,42 @@ function elgg_walled_garden() {
 	elgg_register_css('elgg.walled_garden', '/css/walled_garden.css');
 	elgg_register_js('elgg.walled_garden', '/js/walled_garden.js');
 
+	elgg_register_page_handler('walled_garden', '_elgg_walled_garden_ajax_handler');
+
 	// check for external page view
 	if (isset($CONFIG->site) && $CONFIG->site instanceof ElggSite) {
 		$CONFIG->site->checkWalledGarden();
 	}
+}
+
+/**
+ * Boots the engine
+ *
+ * 1. sets error handlers
+ * 2. connects to database
+ * 3. verifies the installation suceeded
+ * 4. loads application configuration
+ * 5. loads i18n data
+ * 6. loads site configuration
+ *
+ * @access private
+ */
+function _elgg_engine_boot() {
+	// Register the error handlers
+	set_error_handler('_elgg_php_error_handler');
+	set_exception_handler('_elgg_php_exception_handler');
+
+	setup_db_connections();
+
+	verify_installation();
+
+	_elgg_load_application_config();
+
+	register_translations(dirname(dirname(dirname(__FILE__))) . "/languages/");
+
+	_elgg_load_site_config();
+
+	_elgg_load_cache();
 }
 
 /**
@@ -2167,6 +2234,7 @@ define('REFERRER', -1);
 define('REFERER', -1);
 
 elgg_register_event_handler('init', 'system', 'elgg_init');
+elgg_register_event_handler('boot', 'system', '_elgg_engine_boot', 1);
 elgg_register_plugin_hook_handler('unit_test', 'system', 'elgg_api_test');
 
 elgg_register_event_handler('init', 'system', 'add_custom_menu_items', 1000);
