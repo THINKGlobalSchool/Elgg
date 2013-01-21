@@ -44,6 +44,7 @@ function get_user_entity_as_row($guid) {
  * @param string $code     A code
  *
  * @return bool
+ * @access private
  */
 function create_user_entity($guid, $name, $username, $password, $salt, $email, $language, $code) {
 	global $CONFIG;
@@ -136,7 +137,6 @@ function ban_user($user_guid, $reason = "") {
 	global $CONFIG;
 
 	$user_guid = (int)$user_guid;
-	$reason = sanitise_string($reason);
 
 	$user = get_entity($user_guid);
 

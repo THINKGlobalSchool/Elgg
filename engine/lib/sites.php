@@ -18,11 +18,19 @@
 function elgg_get_site_entity($site_guid = 0) {
 	global $CONFIG;
 
+	$result = false;
+	
 	if ($site_guid == 0) {
-		return $CONFIG->site;
+		$site = $CONFIG->site;
+	} else {
+		$site = get_entity($site_guid);
+	}
+	
+	if($site instanceof ElggSite){
+		$result = $site;
 	}
 
-	return get_entity($site_guid);
+	return $result;
 }
 
 /**
@@ -50,6 +58,7 @@ function get_site_entity_as_row($guid) {
  * @param string $url         URL of the site
  *
  * @return bool
+ * @access private
  */
 function create_site_entity($guid, $name, $description, $url) {
 	global $CONFIG;

@@ -130,7 +130,7 @@ class ElggPluginManifest {
 		}
 
 		// see if we need to construct the xml object.
-		if ($manifest instanceof XmlElement) {
+		if ($manifest instanceof ElggXMLElement) {
 			$manifest_obj = $manifest;
 		} else {
 			if (substr(trim($manifest), 0, 1) == '<') {
@@ -264,7 +264,7 @@ class ElggPluginManifest {
 	/**
 	 * Returns the license
 	 *
-	 * @return sting
+	 * @return string
 	 */
 	public function getLicense() {
 		// license vs licence.  Use license.
@@ -276,6 +276,32 @@ class ElggPluginManifest {
 		}
 	}
 
+	/**
+	 * Returns the repository url
+	 *
+	 * @return string
+	 */
+	public function getRepositoryURL() {
+		return $this->parser->getAttribute('repository');
+	}
+
+	/**
+	 * Returns the bug tracker page
+	 *
+	 * @return string
+	 */
+	public function getBugTrackerURL() {
+		return $this->parser->getAttribute('bugtracker');
+	}
+
+	/**
+	 * Returns the donations page
+	 *
+	 * @return string
+	 */
+	public function getDonationsPageURL() {
+		return $this->parser->getAttribute('donations');
+	}
 
 	/**
 	 * Returns the version of the plugin.
@@ -456,7 +482,7 @@ class ElggPluginManifest {
 	 * Normalizes a dependency array using the defined structs.
 	 * Can be used with either requires or suggests.
 	 *
-	 * @param array $dep An dependency array.
+	 * @param array $dep A dependency array.
 	 * @return array The normalized deps array.
 	 */
 	private function normalizeDep($dep) {
@@ -500,8 +526,10 @@ class ElggPluginManifest {
 							break;
 					}
 				}
-
 				break;
+			default:
+				// unrecognized so we just return the raw dependency
+				return $dep;
 		}
 
 		$normalized_dep = $this->buildStruct($struct, $dep);

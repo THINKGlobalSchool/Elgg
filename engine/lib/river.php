@@ -361,6 +361,7 @@ function elgg_get_river(array $options = array()) {
 		}
 
 		$river_items = get_data($query, 'elgg_row_to_elgg_river_item');
+		_elgg_prefetch_river_entities($river_items);
 
 		return $river_items;
 	} else {
@@ -370,11 +371,56 @@ function elgg_get_river(array $options = array()) {
 }
 
 /**
+ * Prefetch entities that will be displayed in the river.
+ *
+ * @param ElggRiverItem[] $river_items
+ * @access private
+ */
+function _elgg_prefetch_river_entities(array $river_items) {
+	// prefetch objects and subjects
+	$guids = array();
+	foreach ($river_items as $item) {
+		if ($item->subject_guid && !retrieve_cached_entity($item->subject_guid)) {
+			$guids[$item->subject_guid] = true;
+		}
+		if ($item->object_guid && !retrieve_cached_entity($item->object_guid)) {
+			$guids[$item->object_guid] = true;
+		}
+	}
+	if ($guids) {
+		// avoid creating oversized query
+		// @todo how to better handle this?
+		$guids = array_slice($guids, 0, 300, true);
+		// return value unneeded, just priming cache
+		elgg_get_entities(array(
+			'guids' => array_keys($guids),
+			'limit' => 0,
+		));
+	}
+
+	// prefetch object containers
+	$guids = array();
+	foreach ($river_items as $item) {
+		$object = $item->getObjectEntity();
+		if ($object->container_guid && !retrieve_cached_entity($object->container_guid)) {
+			$guids[$object->container_guid] = true;
+		}
+	}
+	if ($guids) {
+		$guids = array_slice($guids, 0, 300, true);
+		elgg_get_entities(array(
+			'guids' => array_keys($guids),
+			'limit' => 0,
+		));
+	}
+}
+
+/**
  * List river items
  *
  * @param array $options Any options from elgg_get_river() plus:
  * 	 pagination => BOOL Display pagination links (true)
-
+ *
  * @return string
  * @since 1.8.0
  */
@@ -643,8 +689,10 @@ function elgg_river_init() {
 	elgg_register_page_handler('activity', 'elgg_river_page_handler');
 	$item = new ElggMenuItem('activity', elgg_echo('activity'), 'activity');
 	elgg_register_menu_item('site', $item);
-
+	
 	elgg_register_widget_type('river_widget', elgg_echo('river:widget:title'), elgg_echo('river:widget:description'));
+
+	elgg_register_action('river/delete', '', 'admin');
 
 	elgg_register_plugin_hook_handler('unit_test', 'system', 'elgg_river_test');
 }

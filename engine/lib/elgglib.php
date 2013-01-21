@@ -671,7 +671,7 @@ function elgg_register_event_handler($event, $object_type, $callback, $priority 
 	global $CONFIG;
 
 	if (empty($event) || empty($object_type)) {
-		return FALSE;
+		return false;
 	}
 
 	if (!isset($CONFIG->events)) {
@@ -684,8 +684,8 @@ function elgg_register_event_handler($event, $object_type, $callback, $priority 
 		$CONFIG->events[$event][$object_type] = array();
 	}
 
-	if (!is_callable($callback)) {
-		return FALSE;
+	if (!is_callable($callback, true)) {
+		return false;
 	}
 
 	$priority = max((int) $priority, 0);
@@ -695,7 +695,7 @@ function elgg_register_event_handler($event, $object_type, $callback, $priority 
 	}
 	$CONFIG->events[$event][$object_type][$priority] = $callback;
 	ksort($CONFIG->events[$event][$object_type]);
-	return TRUE;
+	return true;
 }
 
 /**
@@ -710,9 +710,12 @@ function elgg_register_event_handler($event, $object_type, $callback, $priority 
  */
 function elgg_unregister_event_handler($event, $object_type, $callback) {
 	global $CONFIG;
-	foreach ($CONFIG->events[$event][$object_type] as $key => $event_callback) {
-		if ($event_callback == $callback) {
-			unset($CONFIG->events[$event][$object_type][$key]);
+
+	if (isset($CONFIG->events[$event]) && isset($CONFIG->events[$event][$object_type])) {
+		foreach ($CONFIG->events[$event][$object_type] as $key => $event_callback) {
+			if ($event_callback == $callback) {
+				unset($CONFIG->events[$event][$object_type][$key]);
+			}
 		}
 	}
 }
@@ -770,14 +773,14 @@ function elgg_trigger_event($event, $object_type, $object = null) {
 	foreach ($events as $callback_list) {
 		if (is_array($callback_list)) {
 			foreach ($callback_list as $callback) {
-				if (call_user_func_array($callback, $args) === FALSE) {
-					return FALSE;
+				if (is_callable($callback) && (call_user_func_array($callback, $args) === false)) {
+					return false;
 				}
 			}
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 /**
@@ -850,7 +853,7 @@ function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 
 	global $CONFIG;
 
 	if (empty($hook) || empty($type)) {
-		return FALSE;
+		return false;
 	}
 
 	if (!isset($CONFIG->hooks)) {
@@ -863,8 +866,8 @@ function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 
 		$CONFIG->hooks[$hook][$type] = array();
 	}
 
-	if (!is_callable($callback)) {
-		return FALSE;
+	if (!is_callable($callback, true)) {
+		return false;
 	}
 
 	$priority = max((int) $priority, 0);
@@ -874,7 +877,7 @@ function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 
 	}
 	$CONFIG->hooks[$hook][$type][$priority] = $callback;
 	ksort($CONFIG->hooks[$hook][$type]);
-	return TRUE;
+	return true;
 }
 
 /**
@@ -889,9 +892,12 @@ function elgg_register_plugin_hook_handler($hook, $type, $callback, $priority = 
  */
 function elgg_unregister_plugin_hook_handler($hook, $entity_type, $callback) {
 	global $CONFIG;
-	foreach ($CONFIG->hooks[$hook][$entity_type] as $key => $hook_callback) {
-		if ($hook_callback == $callback) {
-			unset($CONFIG->hooks[$hook][$entity_type][$key]);
+
+	if (isset($CONFIG->hooks[$hook]) && isset($CONFIG->hooks[$hook][$entity_type])) {
+		foreach ($CONFIG->hooks[$hook][$entity_type] as $key => $hook_callback) {
+			if ($hook_callback == $callback) {
+				unset($CONFIG->hooks[$hook][$entity_type][$key]);
+			}
 		}
 	}
 }
@@ -970,10 +976,12 @@ function elgg_trigger_plugin_hook($hook, $type, $params = null, $returnvalue = n
 	foreach ($hooks as $callback_list) {
 		if (is_array($callback_list)) {
 			foreach ($callback_list as $hookcallback) {
-				$args = array($hook, $type, $returnvalue, $params);
-				$temp_return_value = call_user_func_array($hookcallback, $args);
-				if (!is_null($temp_return_value)) {
-					$returnvalue = $temp_return_value;
+				if (is_callable($hookcallback)) {
+					$args = array($hook, $type, $returnvalue, $params);
+					$temp_return_value = call_user_func_array($hookcallback, $args);
+					if (!is_null($temp_return_value)) {
+						$returnvalue = $temp_return_value;
+					}
 				}
 			}
 		}
@@ -1060,7 +1068,6 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
 
 	switch ($errno) {
 		case E_USER_ERROR:
-		case E_RECOVERABLE_ERROR: // (e.g. type hint violation)
 			error_log("PHP ERROR: $error");
 			register_error("ERROR: $error");
 
@@ -1070,7 +1077,12 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
 
 		case E_WARNING :
 		case E_USER_WARNING :
-			error_log("PHP WARNING: $error");
+		case E_RECOVERABLE_ERROR: // (e.g. type hint violation)
+			
+			// check if the error wasn't suppressed by the error control operator (@)
+			if (error_reporting()) {
+				error_log("PHP WARNING: $error");
+			}
 			break;
 
 		default:
@@ -1265,7 +1277,7 @@ function elgg_deprecated_notice($msg, $dep_version, $backtrace_level = 1) {
 
 	$msg .= implode("<br /> -> ", $stack);
 
-	elgg_dump($msg, elgg_is_admin_logged_in(), 'WARNING');
+	elgg_log($msg, 'WARNING');
 
 	return true;
 }
@@ -1575,10 +1587,14 @@ function elgg_http_url_is_identical($url1, $url2, $ignore_params = array('offset
  * @param bool   $strict  Return array key if it's set, even if empty. If false,
  *                        return $default if the array key is unset or empty.
  *
- * @return void
+ * @return mixed
  * @since 1.8.0
  */
-function elgg_extract($key, array $array, $default = NULL, $strict = true) {
+function elgg_extract($key, array $array, $default = null, $strict = true) {
+	if (!is_array($array)) {
+		return $default;
+	}
+
 	if ($strict) {
 		return (isset($array[$key])) ? $array[$key] : $default;
 	} else {
@@ -1875,7 +1891,7 @@ function elgg_cacheable_view_page_handler($page, $type) {
 		header("Content-type: $content_type");
 
 		// @todo should js be cached when simple cache turned off
-		//header('Expires: ' . date('r', time() + 864000));
+		//header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', strtotime("+10 days")), true);
 		//header("Pragma: public");
 		//header("Cache-Control: public");
 		//header("Content-Length: " . strlen($return));
@@ -2091,6 +2107,22 @@ function elgg_walled_garden() {
 	if (isset($CONFIG->site) && $CONFIG->site instanceof ElggSite) {
 		$CONFIG->site->checkWalledGarden();
 	}
+}
+
+/**
+ * Remove public access for walled gardens
+ *
+ * @param string $hook
+ * @param string $type
+ * @param array $accesses
+ * @return array
+ * @access private
+ */
+function _elgg_walled_garden_remove_public_access($hook, $type, $accesses) {
+	if (isset($accesses[ACCESS_PUBLIC])) {
+		unset($accesses[ACCESS_PUBLIC]);
+	}
+	return $accesses;
 }
 
 /**

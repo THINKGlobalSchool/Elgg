@@ -308,6 +308,32 @@ function elgg_site_menu_setup($hook, $type, $return, $params) {
 			$return['more'] = array_splice($return['default'], $max_display_items);
 		}
 	}
+	
+	// check if we have anything selected
+	$selected = false;
+	foreach ($return as $section_name => $section) {
+		foreach ($section as $key => $item) {
+			if ($item->getSelected()) {
+				$selected = true;
+				break 2;
+			}
+		}
+	}
+	
+	if (!$selected) {
+		// nothing selected, match name to context
+		foreach ($return as $section_name => $section) {
+			foreach ($section as $key => $item) {
+				// only highlight internal links
+				if (strpos($item->getHref(), elgg_get_site_url()) === 0) {
+					if ($item->getName() == elgg_get_context()) {
+						$return[$section_name][$key]->setSelected(true);
+						break 2;
+					}
+				}
+			}
+		}
+	}
 
 	return $return;
 }
@@ -334,6 +360,18 @@ function elgg_river_menu_setup($hook, $type, $return, $params) {
 				);
 				$return[] = ElggMenuItem::factory($options);
 			}
+		}
+		
+		if (elgg_is_admin_logged_in()) {
+			$options = array(
+				'name' => 'delete',
+				'href' => elgg_add_action_tokens_to_url("action/river/delete?id=$item->id"),
+				'text' => elgg_view_icon('delete'),
+				'title' => elgg_echo('delete'),
+				'confirm' => elgg_echo('deleteconfirm'),
+				'priority' => 200,
+			);
+			$return[] = ElggMenuItem::factory($options);
 		}
 	}
 

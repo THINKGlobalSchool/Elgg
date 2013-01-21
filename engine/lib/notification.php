@@ -38,7 +38,7 @@ $NOTIFICATION_HANDLERS = array();
 function register_notification_handler($method, $handler, $params = NULL) {
 	global $NOTIFICATION_HANDLERS;
 
-	if (is_callable($handler)) {
+	if (is_callable($handler, true)) {
 		$NOTIFICATION_HANDLERS[$method] = new stdClass;
 
 		$NOTIFICATION_HANDLERS[$method]->handler = $handler;
@@ -131,8 +131,9 @@ function notify_user($to, $from, $subject, $message, array $params = NULL, $meth
 					// Extract method details from list
 					$details = $NOTIFICATION_HANDLERS[$method];
 					$handler = $details->handler;
+					/* @var callable $handler */
 
-					if ((!$NOTIFICATION_HANDLERS[$method]) || (!$handler)) {
+					if ((!$NOTIFICATION_HANDLERS[$method]) || (!$handler) || (!is_callable($handler))) {
 						error_log(elgg_echo('NotificationException:NoHandlerFound', array($method)));
 					}
 
@@ -140,7 +141,7 @@ function notify_user($to, $from, $subject, $message, array $params = NULL, $meth
 
 					// Trigger handler and retrieve result.
 					try {
-						$result[$guid][$method] = $handler(
+						$result[$guid][$method] = call_user_func($handler,
 							$from ? get_entity($from) : NULL, 	// From entity
 							get_entity($guid), 					// To entity
 							$subject,							// The subject
@@ -480,8 +481,8 @@ function object_notifications($event, $object_type, $object) {
 		}
 
 		if (isset($CONFIG->register_objects[$object_type][$object_subtype])) {
-			$descr = $CONFIG->register_objects[$object_type][$object_subtype];
-			$string = $descr . ": " . $object->getURL();
+			$subject = $CONFIG->register_objects[$object_type][$object_subtype];
+			$string = $subject . ": " . $object->getURL();
 
 			// Get users interested in content from this person and notify them
 			// (Person defined by container_guid so we can also subscribe to groups if we want)
@@ -500,16 +501,16 @@ function object_notifications($event, $object_type, $object) {
 						if ($user instanceof ElggUser && !$user->isBanned()) {
 							if (($user->guid != $SESSION['user']->guid) && has_access_to_entity($object, $user)
 							&& $object->access_id != ACCESS_PRIVATE) {
-								$methodstring = elgg_trigger_plugin_hook('notify:entity:message', $object->getType(), array(
+								$body = elgg_trigger_plugin_hook('notify:entity:message', $object->getType(), array(
 									'entity' => $object,
 									'to_entity' => $user,
 									'method' => $method), $string);
-								if (empty($methodstring) && $methodstring !== false) {
-									$methodstring = $string;
+								if (empty($body) && $body !== false) {
+									$body = $string;
 								}
-								if ($methodstring !== false) {
-									notify_user($user->guid, $object->container_guid, $descr, $methodstring,
-										NULL, array($method));
+								if ($body !== false) {
+									notify_user($user->guid, $object->container_guid, $subject, $body,
+										null, array($method));
 								}
 							}
 						}
