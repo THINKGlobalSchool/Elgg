@@ -347,12 +347,14 @@ elgg.system_messages = function(msgs, delay, type) {
 
 	msgs.forEach(appendMessage);
 
-	if (type != 'error') {
+	console.log(delay);
+
+	//if (type != 'error') {
 		$(messages_html.join('')).appendTo(systemMessages)
 			.animate({opacity: '1.0'}, delay).fadeOut('slow');
-	} else {
-		$(messages_html.join('')).appendTo(systemMessages);
-	}
+	//} else {
+	//	$(messages_html.join('')).appendTo(systemMessages);
+	//}
 };
 
 /**
