@@ -531,6 +531,7 @@ function can_write_to_container($user_guid = 0, $container_guid = 0, $type = 'al
 		// If still not approved, see if the user is a member of the group
 		// @todo this should be moved to the groups plugin/library
 		if (!$return && $user && $container instanceof ElggGroup) {
+			/* @var ElggGroup $container */
 			if ($container->isMember($user)) {
 				$return = true;
 			}
@@ -1119,16 +1120,17 @@ function _elgg_fetch_entities_from_sql($sql) {
 	// Do secondary queries and merge rows
 	if ($lookup_types) {
 		$dbprefix = elgg_get_config('dbprefix');
-	}
-	foreach ($lookup_types as $type => $guids) {
-		$set = "(" . implode(',', $guids) . ")";
-		$sql = "SELECT * FROM {$dbprefix}{$type}s_entity WHERE guid IN $set";
-		$secondary_rows = get_data($sql);
-		if ($secondary_rows) {
-			foreach ($secondary_rows as $secondary_row) {
-				$key = $guid_to_key[$secondary_row->guid];
-				// cast to arrays to merge then cast back
-				$rows[$key] = (object)array_merge((array)$rows[$key], (array)$secondary_row);
+
+		foreach ($lookup_types as $type => $guids) {
+			$set = "(" . implode(',', $guids) . ")";
+			$sql = "SELECT * FROM {$dbprefix}{$type}s_entity WHERE guid IN $set";
+			$secondary_rows = get_data($sql);
+			if ($secondary_rows) {
+				foreach ($secondary_rows as $secondary_row) {
+					$key = $guid_to_key[$secondary_row->guid];
+					// cast to arrays to merge then cast back
+					$rows[$key] = (object)array_merge((array)$rows[$key], (array)$secondary_row);
+				}
 			}
 		}
 	}
@@ -1217,13 +1219,24 @@ function elgg_get_entity_type_subtype_where_sql($table, $types, $subtypes, $pair
 			$subtype_ids = array();
 			if ($subtypes) {
 				foreach ($subtypes as $subtype) {
-					// check that the subtype is valid (with ELGG_ENTITIES_NO_VALUE being a valid subtype)
-					if (ELGG_ENTITIES_NO_VALUE === $subtype || $subtype_id = get_subtype_id($type, $subtype)) {
-						$subtype_ids[] = (ELGG_ENTITIES_NO_VALUE === $subtype) ? ELGG_ENTITIES_NO_VALUE : $subtype_id;
-					} else {
-						$valid_subtypes_count--;
-						elgg_log("Type-subtype '$type:$subtype' does not exist!", 'NOTICE');
+					// check that the subtype is valid
+					if (!$subtype && ELGG_ENTITIES_NO_VALUE === $subtype) {
+						// subtype value is 0
+						$subtype_ids[] = ELGG_ENTITIES_NO_VALUE;
+					} elseif (!$subtype) {
+						// subtype is ignored.
+						// this handles ELGG_ENTITIES_ANY_VALUE, '', and anything falsy that isn't 0
 						continue;
+					} else {
+						$subtype_id = get_subtype_id($type, $subtype);
+						
+						if ($subtype_id) {
+							$subtype_ids[] = $subtype_id;
+						} else {
+							$valid_subtypes_count--;
+							elgg_log("Type-subtype '$type:$subtype' does not exist!", 'NOTICE');
+							continue;
+						}
 					}
 				}
 
@@ -1459,11 +1472,13 @@ function elgg_list_entities(array $options = array(), $getter = 'elgg_get_entiti
  *
  * @tip Use this to generate a list of archives by month for when entities were added or updated.
  *
+ * @todo document how to pass in array for $subtype
+ *
  * @warning Months are returned in the form YYYYMM.
  *
  * @param string $type           The type of entity
  * @param string $subtype        The subtype of entity
- * @param int    $container_guid The container GUID that the entinties belong to
+ * @param int    $container_guid The container GUID that the entities belong to
  * @param int    $site_guid      The site GUID
  * @param string $order_by       Order_by SQL order by clause
  *
@@ -2413,6 +2428,7 @@ function elgg_instanceof($entity, $type = NULL, $subtype = NULL, $class = NULL) 
 	$return = ($entity instanceof ElggEntity);
 
 	if ($type) {
+		/* @var ElggEntity $entity */
 		$return = $return && ($entity->getType() == $type);
 	}
 

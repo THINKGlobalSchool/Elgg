@@ -362,6 +362,11 @@ class ElggSite extends ElggEntity {
 	public function checkWalledGarden() {
 		global $CONFIG;
 
+		// command line calls should not invoke the walled garden check
+		if (PHP_SAPI === 'cli') {
+			return;
+		}
+
 		if ($CONFIG->walled_garden) {
 			if ($CONFIG->default_access == ACCESS_PUBLIC) {
 				$CONFIG->default_access = ACCESS_LOGGED_IN;
@@ -376,7 +381,9 @@ class ElggSite extends ElggEntity {
 				elgg_register_plugin_hook_handler('index', 'system', 'elgg_walled_garden_index', 1);
 
 				if (!$this->isPublicPage()) {
-					$_SESSION['last_forward_from'] = current_page_url();
+					if (!elgg_is_xhr()) {
+						$_SESSION['last_forward_from'] = current_page_url();
+					}
 					register_error(elgg_echo('loggedinrequired'));
 					forward();
 				}
@@ -437,8 +444,6 @@ class ElggSite extends ElggEntity {
 
 		// include a hook for plugin authors to include public pages
 		$plugins = elgg_trigger_plugin_hook('public_pages', 'walled_garden', NULL, array());
-
-		// lookup admin-specific public pages
 
 		// allow public pages
 		foreach (array_merge($defaults, $plugins) as $public) {

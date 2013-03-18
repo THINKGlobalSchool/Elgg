@@ -1,3 +1,61 @@
+Version 1.8.14
+(March 12, 2013 from https://github.com/Elgg/Elgg/tree/1.8)
+  Contributing Developers:
+   * Aday Talavera
+   * Brett Profitt
+   * Cash Costello
+   * Ed Lyons
+   * German Bortoli
+   * Hellekin Wolf
+   * iionly
+   * Jerome Bakker
+   * Luciano Lima
+   * Matt Beckett
+   * Paweł Sroka
+   * Sem
+   * Steve Clay
+
+  Security Fixes:
+   * Fixed a XSS vulnerability when accepting URLs on user profiles
+   * Fixed bug that exposed subject lines of messages in inbox
+   * Added requirement for CSRF token for login
+
+  Bugfixes:
+   * Strip html tags from tag input
+   * Fixed several display issues for IE7
+   * Fixed several issues with blog drafts
+   * Fixed repeated token timeout errors
+   * Fixed JavaScript localization for non-English languages
+
+  Enhancements:
+   * Web services fall back to json if the viewtype is invalid
+
+
+Version 1.8.13
+(January 29, 2013 from https://github.com/Elgg/Elgg/tree/1.8)
+  Contributing Developers:
+   * Cash Costello
+   * Juho Jaakkola
+   * Kevin Jardine
+   * Krzysztof Różalski
+   * Steve Clay
+
+  Security Fixes:
+   * Added validation of Twitter usernames in Twitter widget
+
+  Bugfixes:
+   * CLI usages with walled garden fixed
+   * Upgrading from < 1.8 to 1.8 fixed
+   * Default widgets fixed
+   * Quotes in object titles no longer result in "qout" in URLs
+   * List of my groups is ordered now
+   * Language string river:comment:object:default is defined now
+   * Added language string for comments: generic_comment:on
+
+  Enhancements:
+   * Added confirm dialog for resetting profile fields (adds language string profile:resetdefault:confirm)
+
+
 Version 1.8.12
 (January 4th, 2013 from https://github.com/Elgg/Elgg/tree/1.8)
   Contributing Developers:
@@ -7,7 +65,6 @@ Version 1.8.12
    * Matt Beckett
    * Paweł Sroka
    * Sem
-   * Srokap
    * Steve Clay
 
   Bugfixes:
@@ -33,6 +90,7 @@ Version 1.8.12
    * Pages: Subpages can be reassigned to new parent pages.
    * Twitter: Login with twitter supports persistent login and correctly forwards
      after login.
+
 
 Version 1.8.11
 (December 5th, 2012 from https://github.com/Elgg/Elgg/tree/1.8)
