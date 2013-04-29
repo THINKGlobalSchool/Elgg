@@ -23,7 +23,7 @@ function parse_urls($text) {
 	//
 	// we can put , in the list of excluded char but need to keep . because of domain names.
 	// it is removed in the callback.
-	$r = preg_replace_callback('/(?<!=)(?<!["\'])((ht|f)tps?:\/\/[^\s\r\n\t<>"\'\!\(\),]+)/i',
+	$r = preg_replace_callback('/(?<![=\/"\'])((ht|f)tps?:\/\/[^\s\r\n\t<>"\'\(\)]+)/i',
 	create_function(
 		'$matches',
 		'
