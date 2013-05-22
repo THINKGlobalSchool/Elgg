@@ -249,78 +249,99 @@ function access_get_show_hidden_status() {
  * unused block and filter lists in addition to using get_access_list() for
  * access collections and the standard access levels.
  *
- * @param string $table_prefix Optional table. prefix for the access code.
- * @param int    $owner        The guid to check access for. Defaults to logged in user.
+ * Note that if this code is executed in privileged mode it will return (1=1).
  *
- * @return string The SQL for a where clause
+ * Plugin authors can hook into the access:get_sql_suffix, user plugin hook to modify,
+ * remove, or add to the where clauses. The plugin hook will pass an array with the current
+ * ors and ands to the function in the form:
+ *  array(
+ *      'ors' => array(),
+ *      'ands' => array()
+ *  )
+ *
+ * The results will be combined into an SQL where clause in the form:
+ *  ((or1 OR or2 OR orN) AND (and1 AND and2 AND andN))
+ *
+ * @param string $table_prefix          Optional table prefix for the access code. (. is appended)
+ * @param int    $user_guid             Optional user guid to get access information for. Defaults
+ *                                      to logged in user.
+ * @param string $owner_guid_column     Optional name of the owner_guid column.
+ * @param string $guid_column           Optional name of the guid column.
+ * @param string $access_id_column      Optional name of the access_id column.
+ * @param bool   $use_enabled_clause    Append 'enabled = "yes"' to the end.
+ * @return string
  * @access private
  */
-function get_access_sql_suffix($table_prefix = '', $owner = null) {
-	global $ENTITY_SHOW_HIDDEN_OVERRIDE, $CONFIG;
+function get_access_sql_suffix($table_prefix = '', $user_guid = 0, $owner_guid_column = 'owner_guid',
+	$guid_column = 'guid', $access_id_column = 'access_id', $use_enabled_clause = true) {
 
-	$sql = "";
-	$friends_bit = "";
-	$enemies_bit = "";
+	global $ENTITY_SHOW_HIDDEN_OVERRIDE, $CONFIG;
 
 	if ($table_prefix) {
 		$table_prefix = sanitise_string($table_prefix) . ".";
 	}
 
-	if (!isset($owner)) {
-		$owner = elgg_get_logged_in_user_guid();
+	$access_id_column = sanitise_string($access_id_column);
+	$owner_guid_column = sanitise_string($owner_guid_column);
+	$guid_column = sanitise_string($guid_column);
+
+	if (!$user_guid) {
+		$user_guid = elgg_get_logged_in_user_guid();
 	}
 
-	if (!$owner) {
-		$owner = -1;
-	}
+	$ignore_access = elgg_check_access_overrides($user_guid);
+	$access = get_access_list($user_guid);
 
-	$ignore_access = elgg_check_access_overrides($owner);
-	$access = get_access_list($owner);
+	$clauses = array(
+		'ors' => array(),
+		'ands' => array()
+	);
 
 	if ($ignore_access) {
-		$sql = " (1 = 1) ";
-	} else if ($owner != -1) {
-		// we have an entity's guid and auto check for friend relationships
-		$friends_bit = "{$table_prefix}access_id = " . ACCESS_FRIENDS . "
-			AND {$table_prefix}owner_guid IN (
+		$clauses['ors'][] = '1 = 1';
+	} else if ($user_guid > 0) {
+		// Check friends
+		$clauses['ors'][] = "{$table_prefix}{$access_id_column} = " . ACCESS_FRIENDS . "
+			AND {$table_prefix}{$owner_guid_column} IN (
 				SELECT guid_one FROM {$CONFIG->dbprefix}entity_relationships
-				WHERE relationship='friend' AND guid_two=$owner
+				WHERE relationship='friend' AND guid_two=$user_guid
 			)";
 
-		$friends_bit = '(' . $friends_bit . ') OR ';
-
-		// @todo untested and unsupported at present
-		if ((isset($CONFIG->user_block_and_filter_enabled)) && ($CONFIG->user_block_and_filter_enabled)) {
-			// check to see if the user is in the entity owner's block list
-			// or if the entity owner is in the user's filter list
-			// if so, disallow access
-			$enemies_bit = get_access_restriction_sql('elgg_block_list', "{$table_prefix}owner_guid", $owner, false);
-			$enemies_bit = '('
-				. $enemies_bit
-				. '	AND ' . get_access_restriction_sql('elgg_filter_list', $owner, "{$table_prefix}owner_guid", false)
-			. ')';
-		}
+		// Check if user owns the content
+		$clauses['ors'][] = "{$table_prefix}{$owner_guid_column} = {$user_guid}";
 	}
 
-	if (empty($sql)) {
-		$sql = " $friends_bit ({$table_prefix}access_id IN {$access}
-			OR ({$table_prefix}owner_guid = {$owner})
-			OR (
-				{$table_prefix}access_id = " . ACCESS_PRIVATE . "
-				AND {$table_prefix}owner_guid = $owner
-			)
-		)";
+	$clauses['ors'][] = "{$table_prefix}{$access_id_column} IN {$access}";
+
+	if (!$ENTITY_SHOW_HIDDEN_OVERRIDE && $use_enabled_clause) {
+		$clauses['ands'][] = "{$table_prefix}enabled='yes'";
 	}
 
-	if ($enemies_bit) {
-		$sql = "$enemies_bit AND ($sql)";
+	$params = array(
+		'table_prefix' => $table_prefix,
+		'access_id_column' => $access_id_column,
+		'owner_guid_column' => $owner_guid_column,
+		'guid_column' => $guid_column,              // @todo this isn't used..
+		'use_enabled_clause' => $use_enabled_clause,
+		'user_guid' => $user_guid,
+		'ignore_access' => $ignore_access,
+		'show_disabled_entities' => $ENTITY_SHOW_HIDDEN_OVERRIDE
+	);
+
+	$clauses = elgg_trigger_plugin_hook('access:get_sql_suffix', 'user', $params, $clauses);
+
+	$clauses_str = '';
+	if (is_array($clauses['ors']) && $clauses['ors']) {
+		$clauses_str = '(' . implode(' OR ', $clauses['ors']) . ')';
 	}
 
-	if (!$ENTITY_SHOW_HIDDEN_OVERRIDE) {
-		$sql .= " and {$table_prefix}enabled='yes'";
+	if (is_array($clauses['ands']) && $clauses['ands']) {
+		$clauses_str .= 'AND (' . implode(' AND ', $clauses['ands']) . ')';
 	}
 
-	return '(' . $sql . ')';
+	$clauses_str = "($clauses_str)";
+
+	return $clauses_str;
 }
 
 /**
@@ -1064,6 +1085,7 @@ function access_test($hook, $type, $value, $params) {
 	global $CONFIG;
 
 	$value[] = $CONFIG->path . 'engine/tests/api/access_collections.php';
+	$value[] = $CONFIG->path . 'engine/tests/api/access_sql_suffix.php';
 	return $value;
 }
 
