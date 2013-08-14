@@ -201,7 +201,7 @@ class ElggAttributeLoader {
 						// are probably only created in the unit tests.
 						// @todo Don't save vanilla ElggEntities with type "site"
 
-						$row = $this->filterAddedColumns($row);
+						//$row = $this->filterAddedColumns($row);
 						$row['guid'] = (int) $row['guid'];
 						return $row;
 					}
@@ -211,7 +211,7 @@ class ElggAttributeLoader {
 			}
 		}
 
-		$row = $this->filterAddedColumns($row);
+		//$row = $this->filterAddedColumns($row);
 
 		// Note: If there are still missing attributes, we're running on a 1.7 or earlier schema. We let
 		// this pass so the upgrades can run.
