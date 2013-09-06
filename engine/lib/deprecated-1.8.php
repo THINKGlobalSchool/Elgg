@@ -880,7 +880,7 @@ function get_objects_in_group($group_guid, $subtype = "", $owner_guid = 0, $site
 	}
 
 	// Add access controls
-	$query .= get_access_sql_suffix('e');
+	$query .= _elgg_get_access_where_sql();
 	if (!$count) {
 		$query .= " order by $order_by";
 

@@ -554,7 +554,7 @@ function get_user_by_username($username) {
 	global $CONFIG, $USERNAME_TO_GUID_MAP_CACHE;
 
 	$username = sanitise_string($username);
-	$access = get_access_sql_suffix('e');
+	$access = _elgg_get_access_where_sql();
 
 	// Caching
 	if ((isset($USERNAME_TO_GUID_MAP_CACHE[$username]))
@@ -588,7 +588,7 @@ function get_user_by_code($code) {
 
 	$code = sanitise_string($code);
 
-	$access = get_access_sql_suffix('e');
+	$access = _elgg_get_access_where_sql();
 
 	// Caching
 	if ((isset($CODE_TO_GUID_MAP_CACHE[$code]))
@@ -621,7 +621,7 @@ function get_user_by_email($email) {
 
 	$email = sanitise_string($email);
 
-	$access = get_access_sql_suffix('e');
+	$access = _elgg_get_access_where_sql();
 
 	$query = "SELECT e.* from {$CONFIG->dbprefix}entities e
 		join {$CONFIG->dbprefix}users_entity u on e.guid=u.guid
