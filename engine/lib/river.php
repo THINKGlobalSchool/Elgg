@@ -475,10 +475,10 @@ function elgg_row_to_elgg_river_item($row) {
 function elgg_river_get_access_sql() {
 	// @todo deprecate? this is only used once in elgg_get_river
 	return _elgg_get_access_where_sql(array(
-		'table_alias' => '',
-		'owner_guid_column' => 'rv.subject_guid',
+		'table_alias' => 'rv',
+		'owner_guid_column' => 'subject_guid',
 		'guid_column' => 'object_guid',
-		'access_id_column' => 'rv.access_id', 
+		'access_id_column' => 'access_id', 
 		'use_enabled_clause' => false,
 	));
 }

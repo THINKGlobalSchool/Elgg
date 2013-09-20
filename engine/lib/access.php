@@ -372,7 +372,7 @@ function _elgg_get_access_where_sql(array $options = array()) {
 * @deprecated 1.9
 */
 function get_access_sql_suffix($table_prefix = '', $owner = null) {
-	elgg_deprecated_notice(__FUNCTION__ . ' is deprecated by _elgg_get_access_where_sql()', 1.9);
+	// elgg_deprecated_notice(__FUNCTION__ . ' is deprecated by _elgg_get_access_where_sql()', 1.9);
 	return _elgg_get_access_where_sql(array(
 		'table_alias' => $table_prefix,
 		'user_guid' => (int)$owner,
