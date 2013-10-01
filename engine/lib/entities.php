@@ -659,9 +659,13 @@ function get_entity_as_row($guid) {
 	}
 
 	$guid = (int) $guid;
-	$access = _elgg_get_access_where_sql(array('table_alias' => ''));
+	$access = _elgg_get_access_where_sql();
 
-	return get_data_row("SELECT * from {$CONFIG->dbprefix}entities where guid=$guid and $access");
+	// if (get_input('pork') == 'beans') {
+	// 	var_dump("SELECT * from {$CONFIG->dbprefix}entities e where e.guid=$guid and $access");
+	// }
+
+	return get_data_row("SELECT * from {$CONFIG->dbprefix}entities e where e.guid=$guid and $access");
 }
 
 /**
