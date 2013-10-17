@@ -1533,7 +1533,7 @@ $order_by = 'time_created') {
 
 	if ($type != "") {
 		$type = sanitise_string($type);
-		$where[] = "type='$type'";
+		$where[] = "e.type='$type'";
 	}
 
 	if (is_array($subtype)) {
@@ -1552,7 +1552,7 @@ $order_by = 'time_created') {
 					if (!empty($tempwhere)) {
 						$tempwhere .= " or ";
 					}
-					$tempwhere .= "(type = '{$typekey}' and subtype = {$subtypeval})";
+					$tempwhere .= "(e.type = '{$typekey}' and e.subtype = {$subtypeval})";
 				}
 			}
 		}
@@ -1564,7 +1564,7 @@ $order_by = 'time_created') {
 			if (!$subtype_id = get_subtype_id($type, $subtype)) {
 				return FALSE;
 			} else {
-				$where[] = "subtype=$subtype_id";
+				$where[] = "e.subtype=$subtype_id";
 			}
 		}
 	}
@@ -1574,21 +1574,21 @@ $order_by = 'time_created') {
 			foreach ($container_guid as $key => $val) {
 				$container_guid[$key] = (int) $val;
 			}
-			$where[] = "container_guid in (" . implode(",", $container_guid) . ")";
+			$where[] = "e.container_guid in (" . implode(",", $container_guid) . ")";
 		} else {
 			$container_guid = (int) $container_guid;
-			$where[] = "container_guid = {$container_guid}";
+			$where[] = "e.container_guid = {$container_guid}";
 		}
 	}
 
 	if ($site_guid > 0) {
-		$where[] = "site_guid = {$site_guid}";
+		$where[] = "e.site_guid = {$site_guid}";
 	}
 
-	$where[] = _elgg_get_access_where_sql(array('table_alias' => ''));
+	$where[] = _elgg_get_access_where_sql(array('table_alias' => 'e'));
 
 	$sql = "SELECT DISTINCT EXTRACT(YEAR_MONTH FROM FROM_UNIXTIME(time_created)) AS yearmonth
-		FROM {$CONFIG->dbprefix}entities where ";
+		FROM {$CONFIG->dbprefix}entities e where ";
 
 	foreach ($where as $w) {
 		$sql .= " $w and ";
