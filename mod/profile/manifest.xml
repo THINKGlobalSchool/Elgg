@@ -9,7 +9,6 @@
 	<website>http://elgg.org/</website>
 	<copyright>See COPYRIGHT.txt</copyright>
 	<license>GNU General Public License Version 2</license>
-	<activate_on_install>true</activate_on_install>
 	<requires>
 		<type>elgg_release</type>
 		<version>1.8</version>
