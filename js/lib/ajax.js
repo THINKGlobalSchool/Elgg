@@ -13,8 +13,8 @@ elgg.provide('elgg.ajax');
  * You would most likely use elgg.get or elgg.post, rather than this function
  *
  * @param {string} url Optionally specify the url as the first argument
- * @param {Object} options Optional. {@see jQuery#ajax}
- * @return {XmlHttpRequest}
+ * @param {Object} options Optional. {@link jQuery#ajax}
+ * @return {jqXHR}
  */
 elgg.ajax = function(url, options) {
 	options = elgg.ajax.handleOptions(url, options);
@@ -90,8 +90,8 @@ elgg.ajax.handleOptions = function(url, options) {
  * Wrapper function for elgg.ajax which forces the request type to 'get.'
  *
  * @param {string} url Optionally specify the url as the first argument
- * @param {Object} options {@see jQuery#ajax}
- * @return {XmlHttpRequest}
+ * @param {Object} options {@link jQuery#ajax}
+ * @return {jqXHR}
  */
 elgg.get = function(url, options) {
 	options = elgg.ajax.handleOptions(url, options);
@@ -104,8 +104,8 @@ elgg.get = function(url, options) {
  * Wrapper function for elgg.get which forces the dataType to 'json.'
  *
  * @param {string} url Optionally specify the url as the first argument
- * @param {Object} options {@see jQuery#ajax}
- * @return {XmlHttpRequest}
+ * @param {Object} options {@link jQuery#ajax}
+ * @return {jqXHR}
  */
 elgg.getJSON = function(url, options) {
 	options = elgg.ajax.handleOptions(url, options);
@@ -118,8 +118,8 @@ elgg.getJSON = function(url, options) {
  * Wrapper function for elgg.ajax which forces the request type to 'post.'
  *
  * @param {string} url Optionally specify the url as the first argument
- * @param {Object} options {@see jQuery#ajax}
- * @return {XmlHttpRequest}
+ * @param {Object} options {@link jQuery#ajax}
+ * @return {jqXHR}
  */
 elgg.post = function(url, options) {
 	options = elgg.ajax.handleOptions(url, options);
@@ -173,7 +173,7 @@ elgg.post = function(url, options) {
  *
  * @param {String} action The action to call.
  * @param {Object} options
- * @return {XMLHttpRequest}
+ * @return {jqXHR}
  */
 elgg.action = function(action, options) {
 	elgg.assertTypeOf('string', action);
@@ -221,8 +221,8 @@ elgg.action = function(action, options) {
  * </pre>
  *
  * @param {String} method The API method to be called
- * @param {Object} options {@see jQuery#ajax}
- * @return {XmlHttpRequest}
+ * @param {Object} options {@link jQuery#ajax}
+ * @return {jqXHR}
  */
 elgg.api = function (method, options) {
 	elgg.assertTypeOf('string', method);

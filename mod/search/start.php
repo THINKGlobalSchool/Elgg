@@ -26,21 +26,21 @@ function search_init() {
 	elgg_register_plugin_hook_handler('search_types', 'get_types', 'search_custom_types_tags_hook');
 	elgg_register_plugin_hook_handler('search', 'tags', 'search_tags_hook');
 
-	elgg_register_plugin_hook_handler('search_types', 'get_types', 'search_custom_types_comments_hook');
-	elgg_register_plugin_hook_handler('search', 'comments', 'search_comments_hook');
-
 	// get server min and max allowed chars for ft searching
 	$CONFIG->search_info = array();
 
-	// can't use get_data() here because some servers don't have these globals set,
-	// which throws a db exception.
-	$dblink = get_db_link('read');
-	$r = mysql_query('SELECT @@ft_min_word_len as min, @@ft_max_word_len as max', $dblink);
-	if ($r && ($word_lens = mysql_fetch_assoc($r))) {
-		$CONFIG->search_info['min_chars'] = $word_lens['min'];
-		$CONFIG->search_info['max_chars'] = $word_lens['max'];
+	$result = false;
+	try {
+		$result = get_data_row('SELECT @@ft_min_word_len as min, @@ft_max_word_len as max');
+	} catch (DatabaseException $e) {
+		// some servers don't have these values set which leads to exception
+		// we ignore the exception
+	}
+	if ($result) {
+		$CONFIG->search_info['min_chars'] = $result->min;
+		$CONFIG->search_info['max_chars'] = $result->max;
 	} else {
-		// uhhh these are good numbers.
+		// defaults from MySQL on Ubuntu Linux
 		$CONFIG->search_info['min_chars'] = 4;
 		$CONFIG->search_info['max_chars'] = 90;
 	}
@@ -50,6 +50,8 @@ function search_init() {
 
 	// extend view for elgg topbar search box
 	elgg_extend_view('page/elements/header', 'search/header');
+
+	elgg_register_plugin_hook_handler('robots.txt', 'site', 'search_exclude_robots');
 }
 
 /**
@@ -499,4 +501,25 @@ function search_get_order_by_sql($entities_table, $type_table, $sort, $order) {
 	}
 
 	return $order_by;
+}
+
+/**
+ * Exclude robots from indexing search pages
+ *
+ * This is good for performance since search is slow and there are many pages all
+ * with the same content.
+ *
+ * @param string $hook Hook name
+ * @param string $type Hook type
+ * @param string $text robots.txt content for plugins
+ * @return string
+ */
+function search_exclude_robots($hook, $type, $text) {
+	$text .= <<<TEXT
+User-agent: *
+Disallow: /search/
+
+TEXT;
+
+	return $text;
 }
