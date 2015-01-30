@@ -1,0 +1,8 @@
+<phpunit bootstrap="./engine/tests/phpunit/bootstrap.php">
+	<testsuites>
+		<testsuite name="All Tests">
+			<directory>./engine/tests/phpunit/</directory>
+			<directory>./engine/classes/</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

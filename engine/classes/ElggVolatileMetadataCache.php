@@ -1,6 +1,6 @@
 <?php
 /**
- * ElggVolatileMetadataCache
+ * \ElggVolatileMetadataCache
  * In memory cache of known metadata values stored by entity.
  *
  * @package    Elgg.Core
@@ -181,7 +181,7 @@ class ElggVolatileMetadataCache {
 	 * @return void
 	 */
 	public function clear($entity_guid) {
-		$this->values[$entity_guid] = array();
+		unset($this->values[$entity_guid]);
 		$this->markOutOfSync($entity_guid);
 	}
 
@@ -278,11 +278,12 @@ class ElggVolatileMetadataCache {
 		// could be useful at some point in future
 		//$guids = $this->filterMetadataHeavyEntities($guids);
 
-		$db_prefix = elgg_get_config('dbprefix');
+		$db_prefix = _elgg_services()->config->get('dbprefix');
 		$options = array(
 			'guids' => $guids,
 			'limit' => 0,
 			'callback' => false,
+			'distinct' => false,
 			'joins' => array(
 				"JOIN {$db_prefix}metastrings v ON n_table.value_id = v.id",
 				"JOIN {$db_prefix}metastrings n ON n_table.name_id = n.id",
@@ -332,7 +333,7 @@ class ElggVolatileMetadataCache {
 	 * @return array
 	 */
 	public function filterMetadataHeavyEntities(array $guids, $limit = 1024000) {
-		$db_prefix = elgg_get_config('dbprefix');
+		$db_prefix = _elgg_services()->config->get('dbprefix');
 
 		$options = array(
 			'guids' => $guids,

@@ -11,7 +11,21 @@
 
 // YYYYMMDD = Elgg Date
 // XX = Interim incrementer
-$version = 2014110100;
+$version = 2014130300;
+
+$composerJson = file_get_contents(dirname(__FILE__) . "/composer.json");
+if ($composerJson === false) {
+	throw new Exception("Unable to read composer.json file!");
+}
+
+$composer = json_decode($composerJson);
+if ($composer === null) {
+	throw new Exception("JSON parse error while reading composer.json!");
+}
 
 // Human-friendly version name
-$release = '1.8.18';
+if (!isset($composer->version)) {
+	throw new Exception("Version field must be set in composer.json!");
+}
+$release = $composer->version;
+

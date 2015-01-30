@@ -2,11 +2,18 @@
 /engine/settings.php
 /.htaccess
 /mod/*
+composer.lock
+
+# Don't check in third party code
+node_modules
+vendor
 
 # don't ignore bundled plugins
+!/mod/aalborg_theme/
 !/mod/blog/
 !/mod/bookmarks/
 !/mod/categories/
+!/mod/ckeditor/
 !/mod/custom_index/
 !/mod/dashboard/
 !/mod/developers/
@@ -18,6 +25,7 @@
 !/mod/groups/
 !/mod/htmlawed/
 !/mod/invitefriends/
+!/mod/legacy_urls/
 !/mod/likes/
 !/mod/logbrowser/
 !/mod/logrotate/
@@ -25,16 +33,15 @@
 !/mod/messageboard/
 !/mod/messages/
 !/mod/notifications/
-!/mod/oauth_api/
 !/mod/pages/
 !/mod/profile/
 !/mod/reportedcontent/
 !/mod/search/
+!/mod/site_notifications/
 !/mod/tagcloud/
-!/mod/tinymce/
-!/mod/twitter/
 !/mod/twitter_api/
 !/mod/uservalidationbyemail/
+!/mod/web_services/
 !/mod/zaudio/
 
 # ignore IDE/hidden/testing/OS cache files
@@ -48,10 +55,17 @@ Session.vim
 tmtags
 Thumbs.db
 Desktop.ini
-/JsTestDriver-*.jar
 
-# don't ignore travis config
+# Codio.com
+startup.sh
+
+# don't ignore special configs
+!/.mailmap
 !/.travis.yml
+!/.scrutinizer.yml
+!.gitignore
+!.scripts
+!.tx
 
 # Spot specific ignores
 /favicon.ico

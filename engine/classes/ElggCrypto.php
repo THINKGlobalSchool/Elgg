@@ -1,6 +1,6 @@
 <?php
 /**
- * ElggCrypto
+ * \ElggCrypto
  *
  * @package    Elgg.Core
  * @subpackage Crypto
@@ -13,6 +13,11 @@ class ElggCrypto {
 	 * Character set for temp passwords (no risk of embedded profanity/glyphs that look similar)
 	 */
 	const CHARS_PASSWORD = 'bcdfghjklmnpqrstvwxyz2346789';
+
+	/**
+	 * Character set for hexadecimal
+	 */
+	const CHARS_HEX = '0123456789abcdef';
 
 	/**
 	 * Generate a string of highly randomized bytes (over the full 8-bit range).
@@ -48,13 +53,13 @@ class ElggCrypto {
 	 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	 */
 	public function getRandomBytes($length) {
+		$SSLstr = '4'; // http://xkcd.com/221/
+
 		/**
 		 * Our primary choice for a cryptographic strong randomness function is
 		 * openssl_random_pseudo_bytes.
 		 */
-		$SSLstr = '4'; // http://xkcd.com/221/
-		if (function_exists('openssl_random_pseudo_bytes')
-				&& (version_compare(PHP_VERSION, '5.3.4') >= 0 || substr(PHP_OS, 0, 3) !== 'WIN')) {
+		if (function_exists('openssl_random_pseudo_bytes') && substr(PHP_OS, 0, 3) !== 'WIN') {
 			$SSLstr = openssl_random_pseudo_bytes($length, $strong);
 			if ($strong) {
 				return $SSLstr;
@@ -65,12 +70,8 @@ class ElggCrypto {
 		 * If mcrypt extension is available then we use it to gather entropy from
 		 * the operating system's PRNG. This is better than reading /dev/urandom
 		 * directly since it avoids reading larger blocks of data than needed.
-		 * Older versions of mcrypt_create_iv may be broken or take too much time
-		 * to finish so we only use this function with PHP 5.3.7 and above.
-		 * @see https://bugs.php.net/bug.php?id=55169
 		 */
-		if (function_exists('mcrypt_create_iv')
-				&& (version_compare(PHP_VERSION, '5.3.7') >= 0 || substr(PHP_OS, 0, 3) !== 'WIN')) {
+		if (function_exists('mcrypt_create_iv') && substr(PHP_OS, 0, 3) !== 'WIN') {
 			$str = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
 			if ($str !== false) {
 				return $str;
@@ -157,6 +158,22 @@ class ElggCrypto {
 	}
 
 	/**
+	 * Generate a MAC with output in Base64URL encoding
+	 *
+	 * @param string $data Data we're creating a MAC for
+	 * @param string $key  HMAC key. uses elgg site secret if none given
+	 * @param string $algo HMAC hash algorithm
+	 * @return string
+	 */
+	function getHmac($data, $key = '', $algo = 'sha256') {
+		if (!$key) {
+			$key = _elgg_services()->siteSecret->get();
+		}
+		$bytes = hash_hmac($algo, $data, $key, true);
+		return strtr(rtrim(base64_encode($bytes), '='), '+/', '-_');
+	}
+
+	/**
 	 * Generate a random string of specified length.
 	 *
 	 * Uses supplied character list for generating the new string.
@@ -175,18 +192,24 @@ class ElggCrypto {
 	 *
 	 * @see https://github.com/zendframework/zf2/blob/master/library/Zend/Math/Rand.php#L179
 	 */
-	public static function getRandomString($length, $chars = null) {
+	public function getRandomString($length, $chars = null) {
 		if ($length < 1) {
-			throw new InvalidArgumentException('Length should be >= 1');
+			throw new \InvalidArgumentException('Length should be >= 1');
 		}
 
 		if (empty($chars)) {
 			$numBytes = ceil($length * 0.75);
-			$bytes    = self::getRandomBytes($numBytes);
+			$bytes    = $this->getRandomBytes($numBytes);
 			$string = substr(rtrim(base64_encode($bytes), '='), 0, $length);
 
 			// Base64 URL
 			return strtr($string, '+/', '-_');
+		}
+
+		if ($chars == self::CHARS_HEX) {
+			// hex is easy
+			$bytes = $this->getRandomBytes(ceil($length / 2));
+			return substr(bin2hex($bytes), 0, $length);
 		}
 
 		$listLen = strlen($chars);
@@ -195,7 +218,7 @@ class ElggCrypto {
 			return str_repeat($chars, $length);
 		}
 
-		$bytes  = self::getRandomBytes($length);
+		$bytes  = $this->getRandomBytes($length);
 		$pos    = 0;
 		$result = '';
 		for ($i = 0; $i < $length; $i++) {
@@ -204,5 +227,58 @@ class ElggCrypto {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Are two strings equal (compared in constant time)?
+	 *
+	 * @param string $str1 First string to compare
+	 * @param string $str2 Second string to compare
+	 *
+	 * @return bool
+	 *
+	 * Based on password_verify in PasswordCompat
+	 * @author Anthony Ferrara <ircmaxell@php.net>
+	 * @license http://www.opensource.org/licenses/mit-license.html MIT License
+	 * @copyright 2012 The Authors
+	 */
+	public function areEqual($str1, $str2) {
+		$len1 = $this->strlen($str1);
+		$len2 = $this->strlen($str2);
+		if ($len1 !== $len2) {
+			return false;
+		}
+
+		$status = 0;
+		for ($i = 0; $i < $len1; $i++) {
+			$status |= (ord($str1[$i]) ^ ord($str2[$i]));
+		}
+
+		return $status === 0;
+	}
+
+	/**
+	 * Count the number of bytes in a string
+	 *
+	 * We cannot simply use strlen() for this, because it might be overwritten by the mbstring extension.
+	 * In this case, strlen() will count the number of *characters* based on the internal encoding. A
+	 * sequence of bytes might be regarded as a single multibyte character.
+	 *
+	 * Use elgg_strlen() to count UTF-characters instead of bytes.
+	 *
+	 * @param string $binary_string The input string
+	 *
+	 * @return int The number of bytes
+	 *
+	 * From PasswordCompat\binary\_strlen
+	 * @author Anthony Ferrara <ircmaxell@php.net>
+	 * @license http://www.opensource.org/licenses/mit-license.html MIT License
+	 * @copyright 2012 The Authors
+	 */
+	protected function strlen($binary_string) {
+		if (function_exists('mb_strlen')) {
+			return mb_strlen($binary_string, '8bit');
+		}
+		return strlen($binary_string);
 	}
 }
