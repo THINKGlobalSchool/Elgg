@@ -566,6 +566,16 @@ class ElggUser extends ElggEntity
 			return $this->isAdmin();
 		}
 
+	
+		// Don't return full name (if entered as: firstname lastname)
+		if (!elgg_is_logged_in() && $name == 'name') {
+			$full_name = parent::__get($name);
+
+			if ($s = strpos($full_name, ' ')) {
+				return substr($full_name, 0, $s);
+			}
+		}
+
 		return parent::__get($name);
 	}
 
