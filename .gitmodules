@@ -206,3 +206,7 @@
 	path = mod/spotconnect
 	url = https://github.com/THINKGlobalSchool/spotconnect
 	branch = master
+[submodule "mod/ecml"]
+	path = mod/ecml
+	url = https://github.com/Elgg/ecml
+	branch = master

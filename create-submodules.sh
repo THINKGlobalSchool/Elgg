@@ -5,6 +5,7 @@
 git submodule add -b master https://github.com/THINKGlobalSchool/announcements mod/announcements                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/blogconnector mod/blogconnector                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/bookmarks-extender mod/bookmarks-extender                                    
+git submodule add -b master https://github.com/Elgg/ecml mod/ecml
 git submodule add -b master https://github.com/ewinslow/elgg-https mod/elgg-https                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/tgsembed mod/tgsembed                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/feedback mod/feedback                                    
