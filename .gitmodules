@@ -198,3 +198,7 @@
 	path = mod/spotconnect
 	url = https://github.com/THINKGlobalSchool/SpotConnectApi
 	branch = master
+[submodule "mod/jqueryfileupload"]
+	path = mod/jqueryfileupload
+	url = https://github.com/THINKGlobalSchool/jqueryfileupload
+	branch = master

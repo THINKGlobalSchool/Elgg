@@ -16,7 +16,8 @@ git submodule add -b master https://github.com/jrtilson/Elgg-Google-API-PHP-Clie
 git submodule add -b master https://github.com/THINKGlobalSchool/googleapps mod/googleapps                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/googlesearch mod/googlesearch                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/group_tools mod/group_tools                                    
-git submodule add -b master https://github.com/THINKGlobalSchool/group-extender mod/group-extender                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/group-extender mod/group-extender    
+git submodule add -b master https://github.com/THINKGlobalSchool/jqueryfileupload mod/jqueryfileupload                                
 git submodule add -b master https://github.com/THINKGlobalSchool/labs mod/labs                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/launchpad mod/launchpad                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/members-extender mod/members-extender                                    
@@ -37,8 +38,7 @@ git submodule add -b master https://github.com/THINKGlobalSchool/rubrics mod/rub
 git submodule add -b master https://github.com/THINKGlobalSchool/schools mod/schools                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/searchimproved mod/searchimproved                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/simplekaltura mod/simplekaltura                                    
-git submodule add -b master https://github.com/THINKGlobalSchool/spiffyactivity mod/spiffyactivity                                    
-git submodule add -b master https://github.com/THINKGlobalSchool/spiritweek mod/spiritweek                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/spiffyactivity mod/spiffyactivity                                                                      
 git submodule add -b master https://github.com/THINKGlobalSchool/spotseo mod/spotseo                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/tagdashboards mod/tagdashboards                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/teacherannotations mod/teacherannotations                                    
