@@ -138,10 +138,6 @@
 	path = mod/spiffyactivity
 	url = https://github.com/THINKGlobalSchool/spiffyactivity
 	branch = master
-[submodule "mod/spiritweek"]
-	path = mod/spiritweek
-	url = https://github.com/THINKGlobalSchool/spiritweek
-	branch = master
 [submodule "mod/spotseo"]
 	path = mod/spotseo
 	url = https://github.com/THINKGlobalSchool/spotseo
@@ -161,14 +157,6 @@
 [submodule "mod/tgsadmin"]
 	path = mod/tgsadmin
 	url = https://github.com/THINKGlobalSchool/tgsadmin
-	branch = master
-[submodule "mod/tgsapi"]
-	path = mod/tgsapi
-	url = https://github.com/THINKGlobalSchool/tgsapi
-	branch = master
-[submodule "mod/tgscalendars"]
-	path = mod/tgscalendars
-	url = https://github.com/THINKGlobalSchool/tgscalendars
 	branch = master
 [submodule "mod/tgstheme"]
 	path = mod/tgstheme
