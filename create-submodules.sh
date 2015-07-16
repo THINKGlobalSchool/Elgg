@@ -54,4 +54,4 @@ git submodule add -b master https://github.com/THINKGlobalSchool/typeaheadtags m
 git submodule add -b master https://github.com/THINKGlobalSchool/wallposts mod/wallposts                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/welcome mod/welcome                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/wire-extender mod/wire-extender                                    
-git submodule add -b master https://github.com/THINKGlobalSchool/spotconnect mod/spotconnect                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/SpotConnectApi mod/spotconnect                                    
