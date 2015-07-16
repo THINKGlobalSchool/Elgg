@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Just a script to bootstrap submodules if needed
+
+git submodule add -b master https://github.com/THINKGlobalSchool/announcements mod/announcements                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/blogconnector mod/blogconnector                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/bookmarks-extender mod/bookmarks-extender                                    
+git submodule add -b master https://github.com/ewinslow/elgg-https mod/elgg-https                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/tgsembed mod/tgsembed                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/feedback mod/feedback                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/file-extender mod/file-extender                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/flickrpublish mod/flickrpublish                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/forums mod/forums                                    
+git submodule add -b master https://github.com/jrtilson/Elgg-Google-API-PHP-Client mod/google-api-php-client                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/googleapps mod/googleapps                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/googlesearch mod/googlesearch                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/group_tools mod/group_tools                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/group-extender mod/group-extender                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/labs mod/labs                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/launchpad mod/launchpad                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/members-extender mod/members-extender                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/messages-extender mod/messages-extender                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/modules mod/modules                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/nofriends mod/nofriends                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/overdrive mod/overdrive                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/pagesdrafts mod/pagesdrafts                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/parentportal mod/parentportal                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/podcasts mod/podcasts                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/publicdashboard mod/publicdashboard                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/publicfilter mod/publicfilter                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/readinglist mod/readinglist                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/reportcards mod/reportcards                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/roles mod/roles                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/rss mod/rss                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/rubrics mod/rubrics                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/schools mod/schools                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/searchimproved mod/searchimproved                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/simplekaltura mod/simplekaltura                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/spiffyactivity mod/spiffyactivity                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/spiritweek mod/spiritweek                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/spotseo mod/spotseo                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/tagdashboards mod/tagdashboards                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/teacherannotations mod/teacherannotations                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/tgs_disqus mod/tgs_disqus                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/tgsadmin mod/tgsadmin                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/tgsapi mod/tgsapi                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/tgscalendars mod/tgscalendars                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/tgstheme mod/tgstheme                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/thewire mod/thewire                                    
+git submodule add -b tgs-tidypics-1.10 https://github.com/THINKGlobalSchool/tidypics mod/tidypics                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/todos mod/todos                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/typeaheadtags mod/typeaheadtags                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/wallposts mod/wallposts                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/welcome mod/welcome                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/wire-extender mod/wire-extender                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/spotconnect mod/spotconnect                                    

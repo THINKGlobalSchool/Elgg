@@ -1,0 +1,208 @@
+[submodule "mod/announcements"]
+	path = mod/announcements
+	url = https://github.com/THINKGlobalSchool/announcements
+	branch = master
+[submodule "mod/blogconnector"]
+	path = mod/blogconnector
+	url = https://github.com/THINKGlobalSchool/blogconnector
+	branch = master
+[submodule "mod/bookmarks-extender"]
+	path = mod/bookmarks-extender
+	url = https://github.com/THINKGlobalSchool/bookmarks-extender
+	branch = master
+[submodule "mod/elgg-https"]
+	path = mod/elgg-https
+	url = https://github.com/ewinslow/elgg-https
+	branch = master
+[submodule "mod/tgsembed"]
+	path = mod/tgsembed
+	url = https://github.com/THINKGlobalSchool/tgsembed
+	branch = master
+[submodule "mod/feedback"]
+	path = mod/feedback
+	url = https://github.com/THINKGlobalSchool/feedback
+	branch = master
+[submodule "mod/file-extender"]
+	path = mod/file-extender
+	url = https://github.com/THINKGlobalSchool/file-extender
+	branch = master
+[submodule "mod/flickrpublish"]
+	path = mod/flickrpublish
+	url = https://github.com/THINKGlobalSchool/flickrpublish
+	branch = master
+[submodule "mod/forums"]
+	path = mod/forums
+	url = https://github.com/THINKGlobalSchool/forums
+	branch = master
+[submodule "mod/google-api-php-client"]
+	path = mod/google-api-php-client
+	url = https://github.com/jrtilson/Elgg-Google-API-PHP-Client
+	branch = master
+[submodule "mod/googleapps"]
+	path = mod/googleapps
+	url = https://github.com/THINKGlobalSchool/googleapps
+	branch = master
+[submodule "mod/googlesearch"]
+	path = mod/googlesearch
+	url = https://github.com/THINKGlobalSchool/googlesearch
+	branch = master
+[submodule "mod/group_tools"]
+	path = mod/group_tools
+	url = https://github.com/THINKGlobalSchool/group_tools
+	branch = master
+[submodule "mod/group-extender"]
+	path = mod/group-extender
+	url = https://github.com/THINKGlobalSchool/group-extender
+	branch = master
+[submodule "mod/labs"]
+	path = mod/labs
+	url = https://github.com/THINKGlobalSchool/labs
+	branch = master
+[submodule "mod/launchpad"]
+	path = mod/launchpad
+	url = https://github.com/THINKGlobalSchool/launchpad
+	branch = master
+[submodule "mod/members-extender"]
+	path = mod/members-extender
+	url = https://github.com/THINKGlobalSchool/members-extender
+	branch = master
+[submodule "mod/messages-extender"]
+	path = mod/messages-extender
+	url = https://github.com/THINKGlobalSchool/messages-extender
+	branch = master
+[submodule "mod/modules"]
+	path = mod/modules
+	url = https://github.com/THINKGlobalSchool/modules
+	branch = master
+[submodule "mod/nofriends"]
+	path = mod/nofriends
+	url = https://github.com/THINKGlobalSchool/nofriends
+	branch = master
+[submodule "mod/overdrive"]
+	path = mod/overdrive
+	url = https://github.com/THINKGlobalSchool/overdrive
+	branch = master
+[submodule "mod/pagesdrafts"]
+	path = mod/pagesdrafts
+	url = https://github.com/THINKGlobalSchool/pagesdrafts
+	branch = master
+[submodule "mod/parentportal"]
+	path = mod/parentportal
+	url = https://github.com/THINKGlobalSchool/parentportal
+	branch = master
+[submodule "mod/podcasts"]
+	path = mod/podcasts
+	url = https://github.com/THINKGlobalSchool/podcasts
+	branch = master
+[submodule "mod/publicdashboard"]
+	path = mod/publicdashboard
+	url = https://github.com/THINKGlobalSchool/publicdashboard
+	branch = master
+[submodule "mod/publicfilter"]
+	path = mod/publicfilter
+	url = https://github.com/THINKGlobalSchool/publicfilter
+	branch = master
+[submodule "mod/readinglist"]
+	path = mod/readinglist
+	url = https://github.com/THINKGlobalSchool/readinglist
+	branch = master
+[submodule "mod/reportcards"]
+	path = mod/reportcards
+	url = https://github.com/THINKGlobalSchool/reportcards
+	branch = master
+[submodule "mod/roles"]
+	path = mod/roles
+	url = https://github.com/THINKGlobalSchool/roles
+	branch = master
+[submodule "mod/rss"]
+	path = mod/rss
+	url = https://github.com/THINKGlobalSchool/rss
+	branch = master
+[submodule "mod/rubrics"]
+	path = mod/rubrics
+	url = https://github.com/THINKGlobalSchool/rubrics
+	branch = master
+[submodule "mod/schools"]
+	path = mod/schools
+	url = https://github.com/THINKGlobalSchool/schools
+	branch = master
+[submodule "mod/searchimproved"]
+	path = mod/searchimproved
+	url = https://github.com/THINKGlobalSchool/searchimproved
+	branch = master
+[submodule "mod/simplekaltura"]
+	path = mod/simplekaltura
+	url = https://github.com/THINKGlobalSchool/simplekaltura
+	branch = master
+[submodule "mod/spiffyactivity"]
+	path = mod/spiffyactivity
+	url = https://github.com/THINKGlobalSchool/spiffyactivity
+	branch = master
+[submodule "mod/spiritweek"]
+	path = mod/spiritweek
+	url = https://github.com/THINKGlobalSchool/spiritweek
+	branch = master
+[submodule "mod/spotseo"]
+	path = mod/spotseo
+	url = https://github.com/THINKGlobalSchool/spotseo
+	branch = master
+[submodule "mod/tagdashboards"]
+	path = mod/tagdashboards
+	url = https://github.com/THINKGlobalSchool/tagdashboards
+	branch = master
+[submodule "mod/teacherannotations"]
+	path = mod/teacherannotations
+	url = https://github.com/THINKGlobalSchool/teacherannotations
+	branch = master
+[submodule "mod/tgs_disqus"]
+	path = mod/tgs_disqus
+	url = https://github.com/THINKGlobalSchool/tgs_disqus
+	branch = master
+[submodule "mod/tgsadmin"]
+	path = mod/tgsadmin
+	url = https://github.com/THINKGlobalSchool/tgsadmin
+	branch = master
+[submodule "mod/tgsapi"]
+	path = mod/tgsapi
+	url = https://github.com/THINKGlobalSchool/tgsapi
+	branch = master
+[submodule "mod/tgscalendars"]
+	path = mod/tgscalendars
+	url = https://github.com/THINKGlobalSchool/tgscalendars
+	branch = master
+[submodule "mod/tgstheme"]
+	path = mod/tgstheme
+	url = https://github.com/THINKGlobalSchool/tgstheme
+	branch = master
+[submodule "mod/thewire"]
+	path = mod/thewire
+	url = https://github.com/THINKGlobalSchool/thewire
+	branch = master
+[submodule "mod/tidypics"]
+	path = mod/tidypics
+	url = https://github.com/THINKGlobalSchool/tidypics
+	branch = tgs-tidypics-1.10
+[submodule "mod/todos"]
+	path = mod/todos
+	url = https://github.com/THINKGlobalSchool/todos
+	branch = master
+[submodule "mod/typeaheadtags"]
+	path = mod/typeaheadtags
+	url = https://github.com/THINKGlobalSchool/typeaheadtags
+	branch = master
+[submodule "mod/wallposts"]
+	path = mod/wallposts
+	url = https://github.com/THINKGlobalSchool/wallposts
+	branch = master
+[submodule "mod/welcome"]
+	path = mod/welcome
+	url = https://github.com/THINKGlobalSchool/welcome
+	branch = master
+[submodule "mod/wire-extender"]
+	path = mod/wire-extender
+	url = https://github.com/THINKGlobalSchool/wire-extender
+	branch = master
+[submodule "mod/spotconnect"]
+	path = mod/spotconnect
+	url = https://github.com/THINKGlobalSchool/spotconnect
+	branch = master
