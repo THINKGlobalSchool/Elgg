@@ -202,3 +202,7 @@
 	path = mod/jqueryfileupload
 	url = https://github.com/THINKGlobalSchool/jqueryfileupload
 	branch = master
+[submodule "mod/spottheme"]
+	path = mod/spottheme
+	url = https://github.com/THINKGlobalSchool/spottheme.git
+	branch = master

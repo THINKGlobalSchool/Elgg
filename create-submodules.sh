@@ -39,7 +39,8 @@ git submodule add -b master https://github.com/THINKGlobalSchool/schools mod/sch
 git submodule add -b master https://github.com/THINKGlobalSchool/searchimproved mod/searchimproved                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/simplekaltura mod/simplekaltura                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/spiffyactivity mod/spiffyactivity                                                                      
-git submodule add -b master https://github.com/THINKGlobalSchool/spotseo mod/spotseo                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/spotseo mod/spotseo
+git submodule add -b master https://github.com/THINKGlobalSchool/spottheme.git mod/spottheme
 git submodule add -b master https://github.com/THINKGlobalSchool/tagdashboards mod/tagdashboards                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/teacherannotations mod/teacherannotations                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/tgs_disqus mod/tgs_disqus                                    
