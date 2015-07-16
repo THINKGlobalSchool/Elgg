@@ -45,7 +45,8 @@ git submodule add -b master https://github.com/THINKGlobalSchool/tagdashboards m
 git submodule add -b master https://github.com/THINKGlobalSchool/teacherannotations mod/teacherannotations                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/tgs_disqus mod/tgs_disqus                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/tgsadmin mod/tgsadmin                                    
-git submodule add -b master https://github.com/THINKGlobalSchool/tgstheme mod/tgstheme                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/tgstheme mod/tgstheme
+git submodule add -b master https://github.com/THINKGlobalSchool/tgsutilities.git mod/tgsutilities                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/thewire mod/thewire                                    
 git submodule add -b tgs-tidypics-1.10 https://github.com/THINKGlobalSchool/tidypics mod/tidypics                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/todos mod/todos                                    

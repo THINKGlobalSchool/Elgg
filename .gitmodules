@@ -206,3 +206,7 @@
 	path = mod/spottheme
 	url = https://github.com/THINKGlobalSchool/spottheme.git
 	branch = master
+[submodule "mod/tgsutilities"]
+	path = mod/tgsutilities
+	url = https://github.com/THINKGlobalSchool/tgsutilities.git
+	branch = master
