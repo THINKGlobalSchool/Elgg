@@ -20,7 +20,8 @@ git submodule add -b master https://github.com/THINKGlobalSchool/group-extender 
 git submodule add -b master https://github.com/THINKGlobalSchool/jqueryfileupload mod/jqueryfileupload                                
 git submodule add -b master https://github.com/THINKGlobalSchool/labs mod/labs                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/launchpad mod/launchpad                                    
-git submodule add -b master https://github.com/THINKGlobalSchool/members-extender mod/members-extender                                    
+git submodule add -b master https://github.com/THINKGlobalSchool/members-extender mod/members-extender
+git submodule add -b master https://github.com/THINKGlobalSchool/mentions.git mod/mentions                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/messages-extender mod/messages-extender                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/modules mod/modules                                    
 git submodule add -b master https://github.com/THINKGlobalSchool/nofriends mod/nofriends                                    
