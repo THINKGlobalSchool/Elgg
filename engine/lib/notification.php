@@ -198,6 +198,10 @@ function _elgg_send_email_notification($hook, $type, $result, $params) {
 	/* @var \Elgg\Notifications\Notification $message */
 	$message = $params['notification'];
 
+	if (!$message) {
+		return false;
+	}
+
 	$sender = $message->getSender();
 	$recipient = $message->getRecipient();
 
